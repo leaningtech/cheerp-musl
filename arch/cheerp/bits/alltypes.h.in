@@ -1,5 +1,5 @@
 #define _REDIR_TIME64 1
-#define _Addr int
+#define _Addr long
 #define _Int64 long long
 #define _Reg int
 
@@ -14,6 +14,8 @@ TYPEDEF long wchar_t;
 #endif
 #endif
 
+TYPEDEF unsigned int size_t;
+
 #if defined(__FLT_EVAL_METHOD__) && __FLT_EVAL_METHOD__ == 0
 TYPEDEF float float_t;
 TYPEDEF double double_t;
@@ -22,10 +24,5 @@ TYPEDEF long double float_t;
 TYPEDEF long double double_t;
 #endif
 
-#if !defined(__cplusplus)
-TYPEDEF struct { _Alignas(8) long long __ll; long double __ld; } max_align_t;
-#elif defined(__GNUC__)
-TYPEDEF struct { __attribute__((__aligned__(8))) long long __ll; long double __ld; } max_align_t;
-#else
-TYPEDEF struct { alignas(8) long long __ll; long double __ld; } max_align_t;
-#endif
+#include <__stddef_max_align_t.h>
+#define __DEFINED_max_align_t
