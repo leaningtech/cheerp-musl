@@ -3,6 +3,8 @@
 #include "pthread_impl.h"
 #include "syscall.h"
 
+#ifndef __CHEERP__
+
 hidden long __cancel(), __syscall_cp_asm(), __syscall_cp_c();
 
 long __cancel()
@@ -99,3 +101,5 @@ int pthread_cancel(pthread_t t)
 	}
 	return pthread_kill(t, SIGCANCEL);
 }
+
+#endif // __CHEERP__

@@ -3,6 +3,7 @@
 #include "syscall.h"
 #include "libc.h"
 
+#ifndef __CHEERP__
 struct ctx {
 	int id, eid, sid;
 	int nr, ret;
@@ -32,3 +33,10 @@ int __setxid(int nr, int id, int eid, int sid)
 	__synccall(do_setxid, &c);
 	return __syscall_ret(c.ret);
 }
+#else // __CHEERP__
+int __setxid(int nr, int id, int eid, int sid)
+{
+	errno = EPERM;
+	return -1;
+}
+#endif // __CHEERP__

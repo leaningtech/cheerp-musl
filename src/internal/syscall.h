@@ -27,6 +27,15 @@ hidden long __syscall_ret(unsigned long),
 	__syscall_cp(syscall_arg_t, syscall_arg_t, syscall_arg_t, syscall_arg_t,
 	             syscall_arg_t, syscall_arg_t, syscall_arg_t);
 
+#ifdef __CHEERP__
+#define __syscall1(n,a) n(a)
+#define __syscall2(n,a,b) n(a,b)
+#define __syscall3(n,a,b,c) n(a,b,c)
+#define __syscall4(n,a,b,c,d) n(a,b,c,d)
+#define __syscall5(n,a,b,c,d,e) n(a,b,c,d,e)
+#define __syscall6(n,a,b,c,d,e,f) n(a,b,c,d,e,f)
+#define __syscall7(n,a,b,c,d,e,f,g) n(a,b,c,d,e,f,g)
+#else
 #define __syscall1(n,a) __syscall1(n,__scc(a))
 #define __syscall2(n,a,b) __syscall2(n,__scc(a),__scc(b))
 #define __syscall3(n,a,b,c) __syscall3(n,__scc(a),__scc(b),__scc(c))
@@ -34,6 +43,7 @@ hidden long __syscall_ret(unsigned long),
 #define __syscall5(n,a,b,c,d,e) __syscall5(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e))
 #define __syscall6(n,a,b,c,d,e,f) __syscall6(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e),__scc(f))
 #define __syscall7(n,a,b,c,d,e,f,g) __syscall7(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e),__scc(f),__scc(g))
+#endif
 
 #define __SYSCALL_NARGS_X(a,b,c,d,e,f,g,h,n,...) n
 #define __SYSCALL_NARGS(...) __SYSCALL_NARGS_X(__VA_ARGS__,7,6,5,4,3,2,1,0,)
@@ -47,6 +57,7 @@ hidden long __syscall_ret(unsigned long),
 #define socketcall(nm,a,b,c,d,e,f) __syscall_ret(__socketcall(nm,a,b,c,d,e,f))
 #define socketcall_cp(nm,a,b,c,d,e,f) __syscall_ret(__socketcall_cp(nm,a,b,c,d,e,f))
 
+#ifndef __CHEERP__
 #define __syscall_cp0(n) (__syscall_cp)(n,0,0,0,0,0,0)
 #define __syscall_cp1(n,a) (__syscall_cp)(n,__scc(a),0,0,0,0,0)
 #define __syscall_cp2(n,a,b) (__syscall_cp)(n,__scc(a),__scc(b),0,0,0,0)
@@ -56,8 +67,16 @@ hidden long __syscall_ret(unsigned long),
 #define __syscall_cp6(n,a,b,c,d,e,f) (__syscall_cp)(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e),__scc(f))
 
 #define __syscall_cp(...) __SYSCALL_DISP(__syscall_cp,__VA_ARGS__)
+#else // __CHEERP__
+#define __syscall_cp(...) __syscall(__VA_ARGS__)
+#endif // __CHEERP__
+
 #define syscall_cp(...) __syscall_ret(__syscall_cp(__VA_ARGS__))
 
+#ifdef __CHEERP__
+#define __socketcall(nm,a,b,c,d,e,f) __syscall(SYS_##nm, a, b, c, d, e, f)
+#define __socketcall_cp(nm,a,b,c,d,e,f) __syscall_cp(SYS_##nm, a, b, c, d, e, f)
+#else // __CHEERP__
 static inline long __alt_socketcall(int sys, int sock, int cp, long a, long b, long c, long d, long e, long f)
 {
 	long r;
@@ -74,6 +93,8 @@ static inline long __alt_socketcall(int sys, int sock, int cp, long a, long b, l
 	(long)(a), (long)(b), (long)(c), (long)(d), (long)(e), (long)(f))
 #define __socketcall_cp(nm, a, b, c, d, e, f) __alt_socketcall(SYS_##nm, __SC_##nm, 1, \
 	(long)(a), (long)(b), (long)(c), (long)(d), (long)(e), (long)(f))
+#endif // __CHEERP__
+
 
 /* fixup legacy 16-bit junk */
 
