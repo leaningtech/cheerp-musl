@@ -18,8 +18,8 @@ static void *start(void *p)
 	char buf[32];
 	ssize_t n;
 	int s = args->sock;
-	void (*func)(union sigval) = args->sev->sigev_notify_function;
-	union sigval val = args->sev->sigev_value;
+	void (*func)(CHEERP_UNION sigval) = args->sev->sigev_notify_function;
+	CHEERP_UNION sigval val = args->sev->sigev_value;
 
 	pthread_barrier_wait(&args->barrier);
 	n = recv(s, buf, sizeof(buf), MSG_NOSIGNAL|MSG_WAITALL);

@@ -20,7 +20,7 @@ size_t __fwritex(const unsigned char *restrict s, size_t l, FILE *restrict f)
 		}
 	}
 
-	memcpy(f->wpos, s, l);
+	memcpy((unsigned char*)f->wpos, s, l);
 	f->wpos += l;
 	return l+i;
 }

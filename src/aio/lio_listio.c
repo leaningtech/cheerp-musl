@@ -83,7 +83,7 @@ int lio_listio(int mode, struct aiocb *restrict const *restrict cbs, int cnt, st
 		}
 		st->cnt = cnt;
 		st->sev = sev;
-		memcpy(st->cbs, (void*) cbs, cnt*sizeof *cbs);
+		memcpy(st->cbs, cbs, cnt*sizeof *cbs);
 	}
 
 	for (i=0; i<cnt; i++) {

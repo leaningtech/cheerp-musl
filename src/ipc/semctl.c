@@ -4,11 +4,17 @@
 #include "syscall.h"
 #include "ipc.h"
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #if __BYTE_ORDER != __BIG_ENDIAN
 #undef SYSCALL_IPC_BROKEN_MODE
 #endif
 
-union semun {
+CHEERP_UNION semun {
 	int val;
 	struct semid_ds *buf;
 	unsigned short *array;
@@ -16,7 +22,7 @@ union semun {
 
 int semctl(int id, int num, int cmd, ...)
 {
-	union semun arg = {0};
+	CHEERP_UNION semun arg = {0};
 	va_list ap;
 	switch (cmd & ~IPC_TIME64) {
 	case SETVAL: case GETALL: case SETALL: case IPC_SET:
@@ -25,7 +31,7 @@ int semctl(int id, int num, int cmd, ...)
 	case SEM_STAT & ~IPC_TIME64:
 	case SEM_STAT_ANY & ~IPC_TIME64:
 		va_start(ap, cmd);
-		arg = va_arg(ap, union semun);
+		arg = va_arg(ap, CHEERP_UNION semun);
 		va_end(ap);
 	}
 #if IPC_TIME64

@@ -149,7 +149,8 @@ long __syscall__newselect(long a1,...);
 long __syscall_flock(long a1,...);
 long __syscall_msync(long a1,...);
 long __syscall_readv(long a1,...);
-long __syscall_writev(long a1, long a2, long a3);
+struct iovec;
+long __syscall_writev(long fd, const struct iovec* ios, long len);
 long __syscall_getsid(long a1,...);
 long __syscall_fdatasync(long a1,...);
 long __syscall__sysctl(long a1,...);
@@ -436,8 +437,8 @@ long __syscall_faccessat2(long a1,...);
 long __syscall_process_madvise(long a1,...);
 
 
-#define VDSO_USEFUL
-#define VDSO_CGT32_SYM "__vdso_clock_gettime"
-#define VDSO_CGT32_VER "LINUX_2.6"
-#define VDSO_CGT_SYM "__vdso_clock_gettime64"
-#define VDSO_CGT_VER "LINUX_2.6"
+//#define VDSO_USEFUL
+//#define VDSO_CGT32_SYM "__vdso_clock_gettime"
+//#define VDSO_CGT32_VER "LINUX_2.6"
+//#define VDSO_CGT_SYM "__vdso_clock_gettime64"
+//#define VDSO_CGT_VER "LINUX_2.6"

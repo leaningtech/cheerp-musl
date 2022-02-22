@@ -19,7 +19,14 @@
 #define inline inline __attribute__((always_inline))
 #endif
 
-static struct {
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
+static struct
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
+{
 	volatile uint64_t binmap;
 	struct bin bins[64];
 	volatile int split_merge_lock[2];
@@ -29,13 +36,19 @@ static struct {
 
 static inline void lock(volatile int *lk)
 {
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#else
 	int need_locks = libc.need_locks;
 	if (need_locks) {
 		while(a_swap(lk, 1)) __wait(lk, lk+1, 1, 1);
 		if (need_locks < 0) libc.need_locks = 0;
 	}
+#endif
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static inline void unlock(volatile int *lk)
 {
 	if (lk[0]) {
@@ -44,6 +57,9 @@ static inline void unlock(volatile int *lk)
 	}
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static inline void lock_bin(int i)
 {
 	lock(mal.bins[i].lock);
@@ -51,11 +67,17 @@ static inline void lock_bin(int i)
 		mal.bins[i].head = mal.bins[i].tail = BIN_TO_CHUNK(i);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static inline void unlock_bin(int i)
 {
 	unlock(mal.bins[i].lock);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static int first_set(uint64_t x)
 {
 #if 1
@@ -83,6 +105,9 @@ static int first_set(uint64_t x)
 #endif
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static const unsigned char bin_tab[60] = {
 	            32,33,34,35,36,36,37,37,38,38,39,39,
 	40,40,40,40,41,41,41,41,42,42,42,42,43,43,43,43,
@@ -90,6 +115,9 @@ static const unsigned char bin_tab[60] = {
 	46,46,46,46,46,46,46,46,47,47,47,47,47,47,47,47,
 };
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static int bin_index(size_t x)
 {
 	x = x / SIZE_ALIGN - 1;
@@ -99,6 +127,9 @@ static int bin_index(size_t x)
 	return bin_tab[x/128-4] + 16;
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static int bin_index_up(size_t x)
 {
 	x = x / SIZE_ALIGN - 1;
@@ -137,6 +168,8 @@ void __dump_heap(int x)
 
 static int traverses_stack_p(uintptr_t old, uintptr_t new)
 {
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#else
 	const uintptr_t len = 8<<20;
 	uintptr_t a, b;
 
@@ -149,6 +182,7 @@ static int traverses_stack_p(uintptr_t old, uintptr_t new)
 	if (new>a && old<b) return 1;
 
 	return 0;
+#endif
 }
 
 /* Expand the heap in-place if brk can be used, or otherwise via mmap,
@@ -159,6 +193,9 @@ static int traverses_stack_p(uintptr_t old, uintptr_t new)
  * and mmap minimum size rules. The caller is responsible for locking
  * to prevent concurrent calls. */
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static void *__expand_heap(size_t *pn)
 {
 	static uintptr_t brk;
@@ -183,6 +220,7 @@ static void *__expand_heap(size_t *pn)
 		return (void *)(brk-n);
 	}
 
+#ifndef __CHEERP__
 	size_t min = (size_t)PAGE_SIZE << mmap_step/2;
 	if (n < min) n = min;
 	void *area = __mmap(0, n, PROT_READ|PROT_WRITE,
@@ -191,8 +229,14 @@ static void *__expand_heap(size_t *pn)
 	*pn = n;
 	mmap_step++;
 	return area;
+#else
+	return NULL;
+#endif
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static struct chunk *expand_heap(size_t n)
 {
 	static void *end;
@@ -231,6 +275,9 @@ static struct chunk *expand_heap(size_t n)
 	return w;
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static int adjust_size(size_t *n)
 {
 	/* Result of pointer difference must fit in ptrdiff_t. */
@@ -247,6 +294,9 @@ static int adjust_size(size_t *n)
 	return 0;
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static void unbin(struct chunk *c, int i)
 {
 	if (c->prev == c->next)
@@ -257,6 +307,9 @@ static void unbin(struct chunk *c, int i)
 	NEXT_CHUNK(c)->psize |= C_INUSE;
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static void bin_chunk(struct chunk *self, int i)
 {
 	self->next = BIN_TO_CHUNK(i);
@@ -267,6 +320,9 @@ static void bin_chunk(struct chunk *self, int i)
 		a_or_64(&mal.binmap, 1ULL<<i);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static void trim(struct chunk *self, size_t n)
 {
 	size_t n1 = CHUNK_SIZE(self);
@@ -290,6 +346,9 @@ static void trim(struct chunk *self, size_t n)
 	unlock_bin(i);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void *malloc(size_t n)
 {
 	struct chunk *c;
@@ -346,11 +405,17 @@ void *malloc(size_t n)
 	return CHUNK_TO_MEM(c);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 int __malloc_allzerop(void *p)
 {
 	return IS_MMAPPED(MEM_TO_CHUNK(p));
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void *realloc(void *p, size_t n)
 {
 	struct chunk *self, *next;
@@ -366,6 +431,7 @@ void *realloc(void *p, size_t n)
 
 	if (n<=n0 && n0-n<=DONTCARE) return p;
 
+#ifndef __CHEERP__
 	if (IS_MMAPPED(self)) {
 		size_t extra = self->psize;
 		char *base = (char *)self - extra;
@@ -386,6 +452,7 @@ void *realloc(void *p, size_t n)
 		self->csize = newlen - extra;
 		return CHUNK_TO_MEM(self);
 	}
+#endif
 
 	next = NEXT_CHUNK(self);
 
@@ -433,6 +500,9 @@ copy_free_ret:
 	return new;
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void __bin_chunk(struct chunk *self)
 {
 	struct chunk *next = NEXT_CHUNK(self);
@@ -479,6 +549,7 @@ void __bin_chunk(struct chunk *self)
 	bin_chunk(self, i);
 	unlock(mal.split_merge_lock);
 
+#ifndef __CHEERP__
 	/* Replace middle of large chunks with fresh zero pages */
 	if (size > RECLAIM && (size^(size-osize)) > size-osize) {
 		uintptr_t a = (uintptr_t)self + SIZE_ALIGN+PAGE_SIZE-1 & -PAGE_SIZE;
@@ -492,10 +563,14 @@ void __bin_chunk(struct chunk *self)
 #endif
 		errno = e;
 	}
+#endif
 
 	unlock_bin(i);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static void unmap_chunk(struct chunk *self)
 {
 	size_t extra = self->psize;
@@ -508,18 +583,26 @@ static void unmap_chunk(struct chunk *self)
 	errno = e;
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void free(void *p)
 {
 	if (!p) return;
 
 	struct chunk *self = MEM_TO_CHUNK(p);
 
+#ifndef __CHEERP__
 	if (IS_MMAPPED(self))
 		unmap_chunk(self);
 	else
+#endif
 		__bin_chunk(self);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void __malloc_donate(char *start, char *end)
 {
 	size_t align_start_up = (SIZE_ALIGN-1) & (-(uintptr_t)start - OVERHEAD);
@@ -539,6 +622,9 @@ void __malloc_donate(char *start, char *end)
 	__bin_chunk(c);
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void __malloc_atfork(int who)
 {
 	if (who<0) {

@@ -291,8 +291,10 @@ int glob(const char *restrict pat, int flags, int (*errfunc)(const char *path, i
 	g->gl_pathv[offs + i] = NULL;
 	g->gl_pathc += cnt;
 
+#if ! (defined(__CHEERP__) && !defined(__ASMJS__))
 	if (!(flags & GLOB_NOSORT))
 		qsort(g->gl_pathv+offs, cnt, sizeof(char *), sort);
+#endif
 	
 	return error;
 }

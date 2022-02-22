@@ -348,8 +348,8 @@ esac
 #
 tryflag CFLAGS_C99FSE -std=c99
 tryflag CFLAGS_C99FSE -nostdinc
-tryflag CFLAGS_C99FSE -ffreestanding \
-|| tryflag CFLAGS_C99FSE -fno-builtin
+#tryflag CFLAGS_C99FSE -ffreestanding \
+#|| tryflag CFLAGS_C99FSE -fno-builtin
 tryflag CFLAGS_C99FSE -fexcess-precision=standard \
 || { test "$ARCH" = i386 && tryflag CFLAGS_C99FSE -ffloat-store ; }
 tryflag CFLAGS_C99FSE -frounding-math

@@ -11,6 +11,12 @@
 #include <math.h>
 #include <float.h>
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 /* Some useful macros */
 
 #define MAX(a,b) ((a)>(b) ? (a) : (b))
@@ -99,14 +105,14 @@ static const unsigned char states[]['z'-'A'+1] = {
 
 #define OOB(x) ((unsigned)(x)-'A' > 'z'-'A')
 
-union arg
+CHEERP_UNION arg
 {
 	uintmax_t i;
 	long double f;
 	void *p;
 };
 
-static void pop_arg(union arg *arg, int type, va_list *ap)
+static void pop_arg(CHEERP_UNION arg *arg, int type, va_list *ap)
 {
 	switch (type) {
 	       case PTR:	arg->p = va_arg(*ap, void *);
@@ -427,12 +433,12 @@ static int getint(char **s) {
 	return i;
 }
 
-static int printf_core(FILE *f, const char *fmt, va_list *ap, union arg *nl_arg, int *nl_type)
+static int printf_core(FILE *f, const char *fmt, va_list *ap, CHEERP_UNION arg *nl_arg, int *nl_type)
 {
 	char *a, *z, *s=(char *)fmt;
 	unsigned l10n=0, fl;
 	int w, p, xp;
-	union arg arg;
+	CHEERP_UNION arg arg;
 	int argpos;
 	unsigned st, ps;
 	int cnt=0, l=0;
@@ -658,7 +664,7 @@ int vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap)
 {
 	va_list ap2;
 	int nl_type[NL_ARGMAX+1] = {0};
-	union arg nl_arg[NL_ARGMAX+1];
+	CHEERP_UNION arg nl_arg[NL_ARGMAX+1];
 	unsigned char internal_buf[80], *saved_buf = 0;
 	int olderr;
 	int ret;

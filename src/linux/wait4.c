@@ -25,6 +25,10 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *ru)
 			return __syscall_ret(r);
 	}
 #endif
+#ifdef __CHEERP__
+	r = __syscall(SYS_wait4, pid, status, options, ru);
+	return __syscall_ret(r);
+#else
 	char *dest = ru ? (char *)&ru->ru_maxrss - 4*sizeof(long) : 0;
 	r = __syscall(SYS_wait4, pid, status, options, dest);
 	if (r>0 && ru && sizeof(time_t) > sizeof(long)) {
@@ -35,5 +39,6 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *ru)
 		ru->ru_stime = (struct timeval)
 			{ .tv_sec = kru[2], .tv_usec = kru[3] };
 	}
+#endif
 	return __syscall_ret(r);
 }

@@ -105,9 +105,21 @@ hidden void __dl_vseterr(const char *, va_list);
 
 hidden ptrdiff_t __tlsdesc_static(), __tlsdesc_dynamic();
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 hidden extern int __malloc_replaced;
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 hidden extern int __aligned_alloc_replaced;
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 hidden void __malloc_donate(char *, char *);
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 hidden int __malloc_allzerop(void *);
 
 #endif

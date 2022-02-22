@@ -50,6 +50,12 @@
 #include <string.h>
 #include <stdint.h>
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 typedef uint32_t BF_word;
 typedef int32_t BF_word_signed;
 
@@ -58,7 +64,27 @@ typedef int32_t BF_word_signed;
 
 typedef BF_word BF_key[BF_N + 2];
 
-typedef union {
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+static int BF_key_memcmp(BF_key s1, BF_key s2, int n) \
+{
+	int ret = 0;
+	BF_word* tmp1 = s1;
+	BF_word* tmp2 = s2;
+	for (size_t i=0;i<n/sizeof(*tmp1);i++)
+	{
+		if (tmp1[i] != tmp2[i])
+		{
+			ret = tmp1[i] < tmp2[i] ? -1 : 1;
+			break;
+		}
+	}
+     return ret;
+}
+#else
+#define BF_key_memcmp memcmp
+#endif
+
+typedef CHEERP_UNION {
 	struct {
 		BF_key P;
 		BF_word S[4][0x100];
@@ -608,7 +634,7 @@ static char *BF_crypt(const char *key, const char *setting,
 	struct {
 		BF_ctx ctx;
 		BF_key expanded_key;
-		union {
+		CHEERP_UNION {
 			BF_word salt[4];
 			BF_word output[6];
 		} binary;
@@ -795,8 +821,8 @@ char *__crypt_blowfish(const char *key, const char *setting, char *output)
 		BF_set_key(k, ye, yi, 4); /* $2y$ */
 		ai[0] ^= 0x10000; /* undo the safety (for comparison) */
 		ok = ok && ai[0] == 0xdb9c59bc && ye[17] == 0x33343500 &&
-		    !memcmp(ae, ye, sizeof(ae)) &&
-		    !memcmp(ai, yi, sizeof(ai));
+		    !BF_key_memcmp(ae, ye, sizeof(ae)) &&
+		    !BF_key_memcmp(ai, yi, sizeof(ai));
 	}
 
 	if (ok && retval)

@@ -6,6 +6,7 @@
 
 struct stat32;
 
+#if ! (defined(__CHEERP__) && !defined(__ASMJS__))
 int __lstat_time32(const char *restrict path, struct stat32 *restrict st32)
 {
 	struct stat st;
@@ -15,3 +16,4 @@ int __lstat_time32(const char *restrict path, struct stat32 *restrict st32)
 }
 
 weak_alias(lstat, lstat64);
+#endif

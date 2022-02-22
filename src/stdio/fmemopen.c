@@ -104,7 +104,7 @@ FILE *fmemopen(void *restrict buf, size_t size, const char *restrict mode)
 	f->f.buf_size = sizeof f->buf - UNGET;
 	if (!buf) {
 		buf = f->buf2;
-		memset(buf, 0, size);
+		memset((char*)buf, 0, size);
 	}
 
 	f->c.buf = buf;

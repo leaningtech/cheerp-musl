@@ -29,7 +29,7 @@ typedef struct {
 	pid_t __pgrp;
 	sigset_t __def, __mask;
 	int __prio, __pol;
-	void *__fn;
+	void (*__fn)();
 	char __pad[64-sizeof(void *)];
 } posix_spawnattr_t;
 

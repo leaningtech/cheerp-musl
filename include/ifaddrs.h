@@ -1,6 +1,12 @@
 #ifndef _IFADDRS_H
 #define _IFADDRS_H
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,7 +21,7 @@ struct ifaddrs {
 	unsigned ifa_flags;
 	struct sockaddr *ifa_addr;
 	struct sockaddr *ifa_netmask;
-	union {
+	CHEERP_UNION {
 		struct sockaddr *ifu_broadaddr;
 		struct sockaddr *ifu_dstaddr;
 	} ifa_ifu;

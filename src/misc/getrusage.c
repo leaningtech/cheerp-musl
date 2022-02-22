@@ -21,6 +21,9 @@ int getrusage(int who, struct rusage *ru)
 	if (SYS_getrusage_time64 == SYS_getrusage || r != -ENOSYS)
 		return __syscall_ret(r);
 #endif
+#ifdef __CHEERP__
+	r = __syscall(SYS_getrusage, who, ru);
+#else
 	char *dest = (char *)&ru->ru_maxrss - 4*sizeof(long);
 	r = __syscall(SYS_getrusage, who, dest);
 	if (!r && sizeof(time_t) > sizeof(long)) {
@@ -31,5 +34,6 @@ int getrusage(int who, struct rusage *ru)
 		ru->ru_stime = (struct timeval)
 			{ .tv_sec = kru[2], .tv_usec = kru[3] };
 	}
+#endif
 	return __syscall_ret(r);
 }

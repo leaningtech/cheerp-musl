@@ -14,6 +14,14 @@
 #include "syscall.h"
 #include "lookup.h"
 
+#if !(defined(__CHEERP__) && !defined(__ASMJS__))
+
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 static void cleanup(void *p)
 {
 	__syscall(SYS_close, (intptr_t)p);
@@ -33,7 +41,7 @@ int __res_msend_rc(int nqueries, const unsigned char *const *queries,
 {
 	int fd;
 	int timeout, attempts, retry_interval, servfail_retry;
-	union {
+	CHEERP_UNION {
 		struct sockaddr_in sin;
 		struct sockaddr_in6 sin6;
 	} sa = {0}, ns[MAXNS] = {{0}};
@@ -186,3 +194,5 @@ int __res_msend(int nqueries, const unsigned char *const *queries,
 	if (__get_resolv_conf(&conf, 0, 0) < 0) return -1;
 	return __res_msend_rc(nqueries, queries, qlens, answers, alens, asize, &conf);
 }
+
+#endif

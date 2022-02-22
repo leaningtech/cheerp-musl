@@ -9,6 +9,7 @@
 #include <errno.h>
 #include "lookup.h"
 
+#if !(defined(__CHEERP__) && !defined(__ASMJS__))
 int getaddrinfo(const char *restrict host, const char *restrict serv, const struct addrinfo *restrict hint, struct addrinfo **restrict res)
 {
 	struct service ports[MAXSERVS];
@@ -133,3 +134,4 @@ int getaddrinfo(const char *restrict host, const char *restrict serv, const stru
 	*res = &out->ai;
 	return 0;
 }
+#endif

@@ -5,7 +5,7 @@
 #include "atomic.h"
 
 struct ksigevent {
-	union sigval sigev_value;
+	CHEERP_UNION sigval sigev_value;
 	int sigev_signo;
 	int sigev_notify;
 	int sigev_tid;
@@ -39,8 +39,8 @@ static void *start(void *arg)
 	struct start_args *args = arg;
 	jmp_buf jb;
 
-	void (*notify)(union sigval) = args->sev->sigev_notify_function;
-	union sigval val = args->sev->sigev_value;
+	void (*notify)(CHEERP_UNION sigval) = args->sev->sigev_notify_function;
+	CHEERP_UNION sigval val = args->sev->sigev_value;
 
 	pthread_barrier_wait(&args->b);
 	for (;;) {

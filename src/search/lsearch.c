@@ -1,6 +1,7 @@
 #include <search.h>
 #include <string.h>
 
+#if ! (defined(__CHEERP__) && !defined(__ASMJS__))
 void *lsearch(const void *key, void *base, size_t *nelp, size_t width,
 	int (*compar)(const void *, const void *))
 {
@@ -28,4 +29,5 @@ void *lfind(const void *key, const void *base, size_t *nelp,
 	return 0;
 }
 
+#endif
 

@@ -1,5 +1,11 @@
 #define _GNU_SOURCE
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
@@ -7,11 +13,12 @@
 #include <errno.h>
 #include <inttypes.h>
 
+#if !(defined(__CHEERP__) && !defined(__ASMJS__))
 int gethostbyaddr_r(const void *a, socklen_t l, int af,
 	struct hostent *h, char *buf, size_t buflen,
 	struct hostent **res, int *err)
 {
-	union {
+	CHEERP_UNION {
 		struct sockaddr_in sin;
 		struct sockaddr_in6 sin6;
 	} sa = { .sin.sin_family = af };
@@ -69,3 +76,4 @@ int gethostbyaddr_r(const void *a, socklen_t l, int af,
 	*res = h;
 	return 0;
 }
+#endif
