@@ -9,6 +9,12 @@
 #include <wchar.h>
 #include <inttypes.h>
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 /* Convenient bit representation for modifier flags, which all fall
  * within 31 codepoints of the space character. */
 
@@ -92,14 +98,14 @@ static const unsigned char states[]['z'-'A'+1] = {
 
 #define OOB(x) ((unsigned)(x)-'A' > 'z'-'A')
 
-union arg
+CHEERP_UNION arg
 {
 	uintmax_t i;
 	long double f;
 	void *p;
 };
 
-static void pop_arg(union arg *arg, int type, va_list *ap)
+static void pop_arg(CHEERP_UNION arg *arg, int type, va_list *ap)
 {
 	switch (type) {
 	       case PTR:	arg->p = va_arg(*ap, void *);
@@ -143,12 +149,12 @@ static const char sizeprefix['y'-'a'] = {
 ['p'-'a']='j'
 };
 
-static int wprintf_core(FILE *f, const wchar_t *fmt, va_list *ap, union arg *nl_arg, int *nl_type)
+static int wprintf_core(FILE *f, const wchar_t *fmt, va_list *ap, CHEERP_UNION arg *nl_arg, int *nl_type)
 {
 	wchar_t *a, *z, *s=(wchar_t *)fmt;
 	unsigned l10n=0, fl;
 	int w, p, xp;
-	union arg arg;
+	CHEERP_UNION arg arg;
 	int argpos;
 	unsigned st, ps;
 	int cnt=0, l=0;
@@ -341,7 +347,7 @@ int vfwprintf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 {
 	va_list ap2;
 	int nl_type[NL_ARGMAX] = {0};
-	union arg nl_arg[NL_ARGMAX];
+	CHEERP_UNION arg nl_arg[NL_ARGMAX];
 	int olderr;
 	int ret;
 

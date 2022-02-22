@@ -4,6 +4,9 @@
 #include <errno.h>
 #include "dynlink.h"
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static size_t mal0_clear(char *p, size_t n)
 {
 	const size_t pagesz = 4096; /* arbitrary */
@@ -24,12 +27,18 @@ static size_t mal0_clear(char *p, size_t n)
 	}
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static int allzerop(void *p)
 {
 	return 0;
 }
 weak_alias(allzerop, __malloc_allzerop);
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void *calloc(size_t m, size_t n)
 {
 	if (n && m > (size_t)-1/n) {

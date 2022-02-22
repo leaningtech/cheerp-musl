@@ -1,6 +1,12 @@
 #ifndef LOOKUP_H
 #define LOOKUP_H
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 #include <features.h>
@@ -9,7 +15,7 @@
 
 struct aibuf {
 	struct addrinfo ai;
-	union sa {
+	CHEERP_UNION sa {
 		struct sockaddr_in sin;
 		struct sockaddr_in6 sin6;
 	} sa;

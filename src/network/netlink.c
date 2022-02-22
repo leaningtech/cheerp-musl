@@ -4,11 +4,17 @@
 #include <sys/socket.h>
 #include "netlink.h"
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 static int __netlink_enumerate(int fd, unsigned int seq, int type, int af,
 	int (*cb)(void *ctx, struct nlmsghdr *h), void *ctx)
 {
 	struct nlmsghdr *h;
-	union {
+	CHEERP_UNION {
 		uint8_t buf[8192];
 		struct {
 			struct nlmsghdr nlh;

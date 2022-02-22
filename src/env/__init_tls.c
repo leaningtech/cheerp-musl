@@ -38,6 +38,7 @@ static struct tls_module main_tls;
 
 void *__copy_tls(unsigned char *mem)
 {
+#if !( defined(__CHEERP__) && !defined(__ASMJS__))
 	pthread_t td;
 	struct tls_module *p;
 	size_t i;
@@ -69,6 +70,9 @@ void *__copy_tls(unsigned char *mem)
 	dtv[0] = libc.tls_cnt;
 	td->dtv = dtv;
 	return td;
+#else
+	return NULL;
+#endif
 }
 
 #if ULONG_MAX == 0xffffffff

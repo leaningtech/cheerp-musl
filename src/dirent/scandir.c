@@ -39,7 +39,9 @@ int scandir(const char *path, struct dirent ***res,
 	}
 	errno = old_errno;
 
+#if ! (defined(__CHEERP__) && !defined(__ASMJS__))
 	if (cmp) qsort(names, cnt, sizeof *names, (int (*)(const void *, const void *))cmp);
+#endif
 	*res = names;
 	return cnt;
 }

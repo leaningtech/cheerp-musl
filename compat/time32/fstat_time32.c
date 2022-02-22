@@ -6,6 +6,7 @@
 
 struct stat32;
 
+#if ! (defined(__CHEERP__) && !defined(__ASMJS__))
 int __fstat_time32(int fd, struct stat32 *restrict st32)
 {
 	struct stat st;
@@ -15,3 +16,4 @@ int __fstat_time32(int fd, struct stat32 *restrict st32)
 }
 
 weak_alias(fstat, fstat64);
+#endif

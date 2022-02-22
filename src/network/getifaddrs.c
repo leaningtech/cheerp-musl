@@ -11,6 +11,8 @@
 
 #define IFADDRS_HASH_SIZE 64
 
+#if !(defined(__CHEERP__) && !defined(__ASMJS__))
+
 /* getifaddrs() reports hardware addresses with PF_PACKET that implies
  * struct sockaddr_ll.  But e.g. Infiniband socket address length is
  * longer than sockaddr_ll.ssl_addr[8] can hold. Use this hack struct
@@ -23,7 +25,7 @@ struct sockaddr_ll_hack {
 	unsigned char sll_addr[24];
 };
 
-union sockany {
+CHEERP_UNION sockany {
 	struct sockaddr sa;
 	struct sockaddr_ll_hack ll;
 	struct sockaddr_in v4;
@@ -33,7 +35,7 @@ union sockany {
 struct ifaddrs_storage {
 	struct ifaddrs ifa;
 	struct ifaddrs_storage *hash_next;
-	union sockany addr, netmask, ifu;
+	CHEERP_UNION sockany addr, netmask, ifu;
 	unsigned int index;
 	char name[IFNAMSIZ+1];
 };
@@ -54,7 +56,7 @@ void freeifaddrs(struct ifaddrs *ifp)
 	}
 }
 
-static void copy_addr(struct sockaddr **r, int af, union sockany *sa, void *addr, size_t addrlen, int ifindex)
+static void copy_addr(struct sockaddr **r, int af, CHEERP_UNION sockany *sa, void *addr, size_t addrlen, int ifindex)
 {
 	uint8_t *dst;
 	int len;
@@ -79,7 +81,7 @@ static void copy_addr(struct sockaddr **r, int af, union sockany *sa, void *addr
 	*r = &sa->sa;
 }
 
-static void gen_netmask(struct sockaddr **r, int af, union sockany *sa, int prefixlen)
+static void gen_netmask(struct sockaddr **r, int af, CHEERP_UNION sockany *sa, int prefixlen)
 {
 	uint8_t addr[16] = {0};
 	int i;
@@ -91,7 +93,7 @@ static void gen_netmask(struct sockaddr **r, int af, union sockany *sa, int pref
 	copy_addr(r, af, sa, addr, sizeof(addr), 0);
 }
 
-static void copy_lladdr(struct sockaddr **r, union sockany *sa, void *addr, size_t addrlen, int ifindex, unsigned short hatype)
+static void copy_lladdr(struct sockaddr **r, CHEERP_UNION sockany *sa, void *addr, size_t addrlen, int ifindex, unsigned short hatype)
 {
 	if (addrlen > sizeof(sa->ll.sll_addr)) return;
 	sa->ll.sll_family = AF_PACKET;
@@ -214,3 +216,5 @@ int getifaddrs(struct ifaddrs **ifap)
 	else freeifaddrs(&ctx->first->ifa);
 	return r;
 }
+
+#endif

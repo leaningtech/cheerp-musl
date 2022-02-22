@@ -9,6 +9,8 @@
 
 #define IFADDRS_HASH_SIZE 64
 
+#if !(defined(__CHEERP__) && !defined(__ASMJS__))
+
 struct ifnamemap {
 	unsigned int hash_next;
 	unsigned int index;
@@ -112,3 +114,5 @@ err:
 	errno = ENOBUFS;
 	return ifs;
 }
+
+#endif

@@ -1,6 +1,12 @@
 #ifndef _RESOLV_H
 #define _RESOLV_H
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #include <stdint.h>
 #include <arpa/nameser.h>
 #include <netinet/in.h>
@@ -47,7 +53,7 @@ typedef struct __res_state {
 	int res_h_errno;
 	int _vcsock;
 	unsigned _flags;
-	union {
+	CHEERP_UNION {
 		char pad[52];
 		struct {
 			uint16_t		nscount;

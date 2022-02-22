@@ -15,6 +15,8 @@
 #include "stdio_impl.h"
 #include "syscall.h"
 
+#if !(defined(__CHEERP__) && !defined(__ASMJS__))
+
 static int is_valid_hostname(const char *host)
 {
 	const unsigned char *s;
@@ -423,3 +425,4 @@ int __lookup_name(struct address buf[static MAXADDRS], char canon[static 256], c
 
 	return cnt;
 }
+#endif

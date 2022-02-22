@@ -9,6 +9,8 @@
 #include <ctype.h>
 #include "lookup.h"
 
+#if !(defined(__CHEERP__) && !defined(__ASMJS__))
+
 int __lookup_ipliteral(struct address buf[static 1], const char *name, int family)
 {
 	struct in_addr a4;
@@ -53,3 +55,4 @@ int __lookup_ipliteral(struct address buf[static 1], const char *name, int famil
 	buf[0].scopeid = scopeid;
 	return 1;
 }
+#endif

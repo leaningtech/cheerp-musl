@@ -18,6 +18,20 @@ int __loc_is_allocated(locale_t loc)
 		&& loc != &default_locale && loc != &default_ctype_locale;
 }
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+static int __locale_memcmp(struct __locale_struct* l1, struct __locale_struct* l2, int n)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (l1->cat[i] != l2->cat[i])
+			return -1;
+	}
+	return 0;
+}
+#else
+#define __locale_memcmp memcmp
+#endif
+
 static locale_t do_newlocale(int mask, const char *name, locale_t loc)
 {
 	struct __locale_struct tmp;
@@ -38,8 +52,8 @@ static locale_t do_newlocale(int mask, const char *name, locale_t loc)
 	/* Otherwise, first see if we can use one of the builtin locales.
 	 * This makes the common usage case for newlocale, getting a C locale
 	 * with predictable behavior, very fast, and more importantly, fail-safe. */
-	if (!memcmp(&tmp, C_LOCALE, sizeof tmp)) return C_LOCALE;
-	if (!memcmp(&tmp, UTF8_LOCALE, sizeof tmp)) return UTF8_LOCALE;
+	if (!__locale_memcmp(&tmp, C_LOCALE, sizeof tmp)) return C_LOCALE;
+	if (!__locale_memcmp(&tmp, UTF8_LOCALE, sizeof tmp)) return UTF8_LOCALE;
 
 	/* And provide builtins for the initial default locale, and a
 	 * variant of the C locale honoring the default locale's encoding. */
@@ -49,8 +63,8 @@ static locale_t do_newlocale(int mask, const char *name, locale_t loc)
 		default_ctype_locale.cat[LC_CTYPE] = default_locale.cat[LC_CTYPE];
 		default_locale_init_done = 1;
 	}
-	if (!memcmp(&tmp, &default_locale, sizeof tmp)) return &default_locale;
-	if (!memcmp(&tmp, &default_ctype_locale, sizeof tmp))
+	if (!__locale_memcmp(&tmp, &default_locale, sizeof tmp)) return &default_locale;
+	if (!__locale_memcmp(&tmp, &default_ctype_locale, sizeof tmp))
 		return &default_ctype_locale;
 
 	/* If no builtin locale matched, attempt to allocate and copy. */

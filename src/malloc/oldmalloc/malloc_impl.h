@@ -4,12 +4,20 @@
 #include <sys/mman.h>
 #include "dynlink.h"
 
-struct chunk {
+struct
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
+chunk {
 	size_t psize, csize;
 	struct chunk *next, *prev;
 };
 
-struct bin {
+struct
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
+bin {
 	volatile int lock[2];
 	struct chunk *head;
 	struct chunk *tail;
@@ -34,6 +42,9 @@ struct bin {
 
 #define IS_MMAPPED(c) !((c)->csize & (C_INUSE))
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 hidden void __bin_chunk(struct chunk *);
 
 #endif

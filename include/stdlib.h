@@ -145,6 +145,9 @@ int getloadavg(double *, int);
 int clearenv(void);
 #define WCOREDUMP(s) ((s) & 0x80)
 #define WIFCONTINUED(s) ((s) == 0xffff)
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void *reallocarray (void *, size_t, size_t);
 #endif
 

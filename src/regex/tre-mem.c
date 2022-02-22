@@ -118,13 +118,13 @@ tre_mem_alloc_impl(tre_mem_t mem, int provided, void *provided_block,
 	    block_size = size * 8;
 	  else
 	    block_size = TRE_MEM_BLOCK_SIZE;
-	  l = xmalloc(sizeof(*l));
+	  l = (tre_list_t*)xmalloc(sizeof(*l));
 	  if (l == NULL)
 	    {
 	      mem->failed = 1;
 	      return NULL;
 	    }
-	  l->data = xmalloc(block_size);
+	  l->data = (char*)xmalloc(block_size);
 	  if (l->data == NULL)
 	    {
 	      xfree(l);
@@ -152,7 +152,7 @@ tre_mem_alloc_impl(tre_mem_t mem, int provided, void *provided_block,
 
   /* Set to zero if needed. */
   if (zero)
-    memset(ptr, 0, size);
+    memset((char*)ptr, 0, size);
 
   return ptr;
 }

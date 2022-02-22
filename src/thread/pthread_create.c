@@ -342,7 +342,7 @@ int __pthread_create(pthread_t *restrict res, const pthread_attr_t *restrict att
 	/* Ensure SIGCANCEL is unblocked in new thread. This requires
 	 * working with a copy of the set so we can restore the
 	 * original mask in the calling thread. */
-	memcpy(&args->sig_mask, &set, sizeof args->sig_mask);
+	memcpy(&args->sig_mask[0], &set.__bits[0], sizeof args->sig_mask);
 	args->sig_mask[(SIGCANCEL-1)/8/sizeof(long)] &=
 		~(1UL<<((SIGCANCEL-1)%(8*sizeof(long))));
 

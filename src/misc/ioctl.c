@@ -35,6 +35,8 @@ struct v4l2_event {
 	uint32_t c[2], ts[2], d[9];
 };
 
+
+#ifndef __CHEERP__
 static const struct ioctl_compat_map compat_map[] = {
 	{ SIOCGSTAMP, SIOCGSTAMP_OLD, 8, R, 0, OFFS(0, 4) },
 	{ SIOCGSTAMPNS, SIOCGSTAMPNS_OLD, 8, R, 0, OFFS(0, 4) },
@@ -119,6 +121,7 @@ static void convert_ioctl_struct(const struct ioctl_compat_map *map, char *old, 
 	if (dir==W) memcpy(old+old_offset, new+new_offset, old_size-old_offset);
 	else memcpy(new+new_offset, old+old_offset, old_size-old_offset);
 }
+#endif
 
 int ioctl(int fd, int req, ...)
 {
@@ -128,6 +131,7 @@ int ioctl(int fd, int req, ...)
 	arg = va_arg(ap, void *);
 	va_end(ap);
 	int r = __syscall(SYS_ioctl, fd, req, arg);
+#ifndef __CHEERP__
 	if (SIOCGSTAMP != SIOCGSTAMP_OLD && req && r==-ENOTTY) {
 		for (int i=0; i<sizeof compat_map/sizeof *compat_map; i++) {
 			if (compat_map[i].new_req != req) continue;
@@ -142,5 +146,6 @@ int ioctl(int fd, int req, ...)
 			break;
 		}
 	}
+#endif
 	return __syscall_ret(r);
 }

@@ -1,6 +1,12 @@
 #ifndef _SIGNAL_H
 #define _SIGNAL_H
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -89,7 +95,7 @@ typedef struct sigaltstack stack_t;
 #define CLD_STOPPED 5
 #define CLD_CONTINUED 6
 
-union sigval {
+CHEERP_UNION sigval {
 	int sival_int;
 	void *sival_ptr;
 };
@@ -100,7 +106,7 @@ typedef struct {
 #else
 	int si_signo, si_errno, si_code;
 #endif
-	union {
+	CHEERP_UNION {
 		char __pad[128 - 2*sizeof(int) - sizeof(long)];
 		struct {
 			union {
@@ -113,8 +119,8 @@ typedef struct {
 					int si_overrun;
 				} __timer;
 			} __first;
-			union {
-				union sigval si_value;
+			CHEERP_UNION {
+				CHEERP_UNION sigval si_value;
 				struct {
 					int si_status;
 					clock_t si_utime, si_stime;
@@ -124,7 +130,7 @@ typedef struct {
 		struct {
 			void *si_addr;
 			short si_addr_lsb;
-			union {
+			CHEERP_UNION {
 				struct {
 					void *si_lower;
 					void *si_upper;
@@ -165,7 +171,7 @@ typedef struct {
 #define si_arch    __si_fields.__sigsys.si_arch
 
 struct sigaction {
-	union {
+	CHEERP_UNION {
 		void (*sa_handler)(int);
 		void (*sa_sigaction)(int, siginfo_t *, void *);
 	} __sa_handler;
@@ -177,14 +183,14 @@ struct sigaction {
 #define sa_sigaction __sa_handler.sa_sigaction
 
 struct sigevent {
-	union sigval sigev_value;
+	CHEERP_UNION sigval sigev_value;
 	int sigev_signo;
 	int sigev_notify;
-	union {
-		char __pad[64 - 2*sizeof(int) - sizeof(union sigval)];
+	CHEERP_UNION {
+		char __pad[64 - 2*sizeof(int) - sizeof(CHEERP_UNION sigval)];
 		pid_t sigev_notify_thread_id;
 		struct {
-			void (*sigev_notify_function)(union sigval);
+			void (*sigev_notify_function)(CHEERP_UNION sigval);
 			pthread_attr_t *sigev_notify_attributes;
 		} __sev_thread;
 	} __sev_fields;
@@ -220,7 +226,7 @@ int sigpending(sigset_t *);
 int sigwait(const sigset_t *__restrict, int *__restrict);
 int sigwaitinfo(const sigset_t *__restrict, siginfo_t *__restrict);
 int sigtimedwait(const sigset_t *__restrict, siginfo_t *__restrict, const struct timespec *__restrict);
-int sigqueue(pid_t, int, union sigval);
+int sigqueue(pid_t, int, CHEERP_UNION sigval);
 
 int pthread_sigmask(int, const sigset_t *__restrict, sigset_t *__restrict);
 int pthread_kill(pthread_t, int);

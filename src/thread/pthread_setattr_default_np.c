@@ -5,13 +5,29 @@
 #define MIN(a,b) ((a)<(b) ? (a) : (b))
 #define MAX(a,b) ((a)>(b) ? (a) : (b))
 
+
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+static int pthread_attr_memcmp(pthread_attr_t* a, pthread_attr_t* b, int s)
+{
+	if (a->__u.__i != b->__u.__i)
+		return -1;
+	if (a->__u.__vi != b->__u.__vi)
+		return -1;
+	if (a->__u.__s != b->__u.__s)
+		return -1;
+	return 0;
+}
+#else
+#define pthread_attr_memcmp memcmp
+#endif
+
 int pthread_setattr_default_np(const pthread_attr_t *attrp)
 {
 	/* Reject anything in the attr object other than stack/guard size. */
 	pthread_attr_t tmp = *attrp, zero = { 0 };
 	tmp._a_stacksize = 0;
 	tmp._a_guardsize = 0;
-	if (memcmp(&tmp, &zero, sizeof tmp))
+	if (pthread_attr_memcmp(&tmp, &zero, sizeof tmp))
 		return EINVAL;
 
 	unsigned stack = MIN(attrp->_a_stacksize, DEFAULT_STACK_MAX);

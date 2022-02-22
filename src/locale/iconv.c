@@ -473,7 +473,7 @@ size_t iconv(iconv_t cd, char **restrict in, size_t *restrict inb, char **restri
 					size_t tmplen = ptmp - tmp.c;
 					if (tmplen > *outb) goto toobig;
 					if (tmpx) x++;
-					memcpy(*out, &tmp, tmplen);
+					memcpy(*out, &tmp.c[0], tmplen);
 					*out += tmplen;
 					*outb -= tmplen;
 					continue;

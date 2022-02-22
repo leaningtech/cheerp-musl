@@ -29,6 +29,12 @@
 
 */
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 #include <regex.h>
@@ -284,7 +290,7 @@ declare_popf(int, int);
       return _status;							      \
   }
 
-union tre_stack_item {
+CHEERP_UNION tre_stack_item {
   void *voidptr_value;
   int int_value;
 };
@@ -294,7 +300,7 @@ struct tre_stack_rec {
   int max_size;
   int increment;
   int ptr;
-  union tre_stack_item *stack;
+  CHEERP_UNION tre_stack_item *stack;
 };
 
 
@@ -334,7 +340,7 @@ tre_stack_num_objects(tre_stack_t *s)
 }
 
 static reg_errcode_t
-tre_stack_push(tre_stack_t *s, union tre_stack_item value)
+tre_stack_push(tre_stack_t *s, CHEERP_UNION tre_stack_item value)
 {
   if (s->ptr < s->size)
     {
@@ -349,7 +355,7 @@ tre_stack_push(tre_stack_t *s, union tre_stack_item value)
 	}
       else
 	{
-	  union tre_stack_item *new_buffer;
+	  CHEERP_UNION tre_stack_item *new_buffer;
 	  int new_size;
 	  new_size = s->size + s->increment;
 	  if (new_size > s->max_size)
@@ -370,7 +376,7 @@ tre_stack_push(tre_stack_t *s, union tre_stack_item value)
 
 #define define_pushf(typetag, type)  \
   declare_pushf(typetag, type) {     \
-    union tre_stack_item item;	     \
+    CHEERP_UNION tre_stack_item item;	     \
     item.typetag ## _value = value;  \
     return tre_stack_push(s, item);  \
 }
@@ -651,7 +657,10 @@ static reg_errcode_t parse_bracket(tre_parse_ctx_t *ctx, const char *s)
 			lit->position = -1;
 		}
 		/* Sort the array if we need to negate it. */
+
+#if ! (defined(__CHEERP__) && !defined(__ASMJS__))
 		qsort(ls.a, ls.len, sizeof *ls.a, tre_compare_lit);
+#endif
 		/* extra lit for the last negated range */
 		lit = tre_new_lit(&ls);
 		if (!lit) {

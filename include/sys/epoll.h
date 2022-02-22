@@ -1,6 +1,12 @@
 #ifndef	_SYS_EPOLL_H
 #define	_SYS_EPOLL_H
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -38,7 +44,7 @@ enum EPOLL_EVENTS { __EPOLL_DUMMY };
 #define EPOLL_CTL_DEL 2
 #define EPOLL_CTL_MOD 3
 
-typedef union epoll_data {
+typedef CHEERP_UNION epoll_data {
 	void *ptr;
 	int fd;
 	uint32_t u32;

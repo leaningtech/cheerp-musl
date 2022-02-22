@@ -1,6 +1,12 @@
 #ifndef _NET_IF_H
 #define _NET_IF_H
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define CHEERP_UNION struct
+#else
+#define CHEERP_UNION union
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -77,7 +83,7 @@ struct ifreq {
 	union {
 		char ifrn_name[IFNAMSIZ];
 	} ifr_ifrn;
-	union {
+	CHEERP_UNION {
 		struct sockaddr ifru_addr;
 		struct sockaddr ifru_dstaddr;
 		struct sockaddr ifru_broadaddr;
