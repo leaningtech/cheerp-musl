@@ -1,3 +1,4 @@
+#define INTERNAL_MUSL
 #include <stdlib.h>
 
 #ifdef __CHEERP__
