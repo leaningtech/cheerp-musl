@@ -1,3 +1,4 @@
+#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <stdint.h>
 #include <errno.h>

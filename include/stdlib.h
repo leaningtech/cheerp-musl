@@ -37,10 +37,25 @@ unsigned long long strtoull (const char *__restrict, char **__restrict, int);
 int rand (void);
 void srand (unsigned);
 
+#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
+__attribute((cheerp_asmjs))
+#endif
 void *malloc (size_t);
+#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
+__attribute((cheerp_asmjs))
+#endif
 void *calloc (size_t, size_t);
+#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
+__attribute((cheerp_asmjs))
+#endif
 void *realloc (void *, size_t);
+#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
+__attribute((cheerp_asmjs))
+#endif
 void free (void *);
+#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
+__attribute((cheerp_asmjs))
+#endif
 void *aligned_alloc(size_t, size_t);
 
 _Noreturn void abort (void);

@@ -1,3 +1,4 @@
+#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -34,6 +35,9 @@ static int allzerop(void *p)
 {
 	return 0;
 }
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 weak_alias(allzerop, __malloc_allzerop);
 
 #ifdef __CHEERP__

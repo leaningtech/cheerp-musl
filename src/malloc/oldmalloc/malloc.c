@@ -1,4 +1,5 @@
 #define _GNU_SOURCE
+#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>

@@ -1,4 +1,5 @@
 #define _BSD_SOURCE
+#define INTERNAL_MUSL
 #include <errno.h>
 #include <stdlib.h>
 
