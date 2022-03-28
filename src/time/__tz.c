@@ -9,7 +9,7 @@
 #include "lock.h"
 #include "fork_impl.h"
 
-#define malloc __libc_malloc
+//#define malloc __libc_malloc
 #define calloc undef
 #define realloc undef
 #define free undef

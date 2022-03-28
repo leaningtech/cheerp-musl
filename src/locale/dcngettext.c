@@ -12,8 +12,8 @@
 #include "lock.h"
 #include "fork_impl.h"
 
-#define malloc __libc_malloc
-#define calloc __libc_calloc
+//#define malloc __libc_malloc
+//#define calloc __libc_calloc
 #define realloc undef
 #define free undef
 
