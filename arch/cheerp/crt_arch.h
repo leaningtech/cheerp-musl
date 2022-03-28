@@ -1,16 +1,33 @@
-__asm__(
-".text\n"
-".weak _DYNAMIC \n"
-".hidden _DYNAMIC \n"
-".global " START "\n"
-START ":\n"
-"	xor %ebp,%ebp \n"
-"	mov %esp,%eax \n"
-"	and $-16,%esp \n"
-"	push %eax \n"
-"	push %eax \n"
-"	call 1f \n"
-"1:	addl $_DYNAMIC-1b,(%esp) \n"
-"	push %eax \n"
-"	call " START "_c \n"
-);
+#include "libc.h"
+#include "pthread_arch.h"
+#include "pthread_impl.h"
+
+weak int main(int argc, char* argv[])
+{
+}
+weak void webMain()
+{
+	main(0, NULL);
+}
+void __cheerp_constructors(void);
+
+void __cheerp_init_tp()
+{
+	pthread_t td = __get_tp();
+	td->self = td;
+	libc.can_do_threads = 1;
+	td->detach_state = DT_JOINABLE;
+	td->tid = 1;
+	td->locale = &libc.global_locale;
+	td->robust_list.head = &td->robust_list.head;
+	td->sysinfo = __sysinfo;
+	td->next = td->prev = td;
+}
+
+__attribute((cheerp_genericjs))
+void _start()
+{
+	__cheerp_init_tp();
+	__cheerp_constructors();
+	webMain();
+}
