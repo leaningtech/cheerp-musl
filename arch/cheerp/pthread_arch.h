@@ -1,7 +1,12 @@
-static inline uintptr_t __get_tp()
+#ifndef __CHEERP_PTHREAD_ARCH_H
+#define __CHEERP_PTHREAD_ARCH_H
+struct __pthread; 
+extern struct __pthread __dummy_thread;
+static inline struct __pthread* __get_tp()
 {
-	uintptr_t tp;
-	return tp;
+	return &__dummy_thread;
 }
 
 #define MC_PC gregs[REG_EIP]
+
+#endif // __CHEERP_PTHREAD_ARCH_H
