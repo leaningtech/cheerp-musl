@@ -242,7 +242,7 @@ long __syscall_lremovexattr(long a1,...);
 long __syscall_fremovexattr(long a1,...);
 long __syscall_tkill(long a1,...);
 long __syscall_sendfile64(long a1,...);
-long __syscall_futex(long a1,...);
+long __syscall_futex(int* a1,...);
 long __syscall_sched_setaffinity(long a1,...);
 long __syscall_sched_getaffinity(long a1,...);
 long __syscall_set_thread_area(long a1,...);
