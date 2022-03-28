@@ -57,7 +57,7 @@ long __syscall_getegid(long a1,...);
 long __syscall_acct(long a1,...);
 long __syscall_umount2(long a1,...);
 long __syscall_lock(long a1,...);
-long __syscall_ioctl(long fd, long req, long arg);
+long __syscall_ioctl(long fd, long req, void* arg);
 long __syscall_fcntl(long a1,...);
 long __syscall_mpx(long a1,...);
 long __syscall_setpgid(long a1,...);
