@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 
-void *memset(void *dest, int c, size_t n)
+weak void *memset(void *dest, int c, size_t n)
 {
 	unsigned char *s = dest;
 	size_t k;
