@@ -28,5 +28,11 @@ hidden int __shgetc(FILE *);
 #define shgetc(f) (((f)->rpos != (f)->shend) ? *(f)->rpos++ : __shgetc(f))
 #define shunget(f) ((f)->shlim>=0 ? (void)(f)->rpos-- : (void)0)
 
+#ifdef __CHEERP__
+extern char __sh_sentinel;
+#define __SH_SENTINEL (&__sh_sentinel)
+#else
+#define __SH_SENTINEL (-1)
+#endif
 #define sh_fromstring(f, s) \
-	((f)->buf = (f)->rpos = (void *)(s), (f)->rend = (void*)-1)
+	((f)->buf = (f)->rpos = (void *)(s), (f)->rend = (void*)__SH_SENTINEL)

@@ -9,6 +9,10 @@
 #include "shgetc.h"
 #include "floatscan.h"
 
+#ifdef __CHEERP__
+char __sh_sentinel = 's';
+#endif
+
 #if LDBL_MANT_DIG == 53 && LDBL_MAX_EXP == 1024
 
 #define LD_B1B_DIG 2
