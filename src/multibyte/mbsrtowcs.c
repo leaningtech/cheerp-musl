@@ -11,9 +11,9 @@ size_t mbsrtowcs(wchar_t *restrict ws, const char **restrict src, size_t wn, mbs
 	size_t wn0 = wn;
 	unsigned c = 0;
 
-	if (st && (c = *(unsigned *)st)) {
+	if (st && (c = st->__opaque1)) {
 		if (ws) {
-			*(unsigned *)st = 0;
+			st->__opaque1 = 0;
 			goto resume;
 		} else {
 			goto resume0;
