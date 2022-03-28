@@ -2,6 +2,10 @@
 #include "pthread_impl.h"
 #include "libc.h"
 
+#ifdef __CHEERP__
+struct __locale_struct __dummy_locale;
+#endif
+
 locale_t __uselocale(locale_t new)
 {
 	pthread_t self = __pthread_self();

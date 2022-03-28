@@ -63,7 +63,12 @@ struct lconv *localeconv(void);
 
 #include <bits/alltypes.h>
 
+#ifdef __CHEERP__
+extern struct __locale_struct __dummy_locale;
+#define LC_GLOBAL_LOCALE (&__dummy_locale)
+#else
 #define LC_GLOBAL_LOCALE ((locale_t)-1)
+#endif
 
 #define LC_CTYPE_MASK    (1<<LC_CTYPE)
 #define LC_NUMERIC_MASK  (1<<LC_NUMERIC)
