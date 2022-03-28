@@ -4,7 +4,7 @@
 #include "locale_impl.h"
 #include "lock.h"
 
-#define malloc __libc_malloc
+//#define malloc __libc_malloc
 #define calloc undef
 #define realloc undef
 #define free undef
