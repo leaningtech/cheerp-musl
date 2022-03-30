@@ -16,6 +16,15 @@
 //#define realloc __libc_realloc
 //#define free __libc_free
 
+int get_errno()
+{
+	return errno;
+}
+void set_errno(int e)
+{
+	set_errno(e);
+}
+
 #if defined(__GNUC__) && defined(__PIC__)
 #define inline inline __attribute__((always_inline))
 #endif
@@ -204,7 +213,7 @@ static void *__expand_heap(size_t *pn)
 	size_t n = *pn;
 
 	if (n > SIZE_MAX/2 - PAGE_SIZE) {
-		errno = ENOMEM;
+		set_errno(ENOMEM);
 		return 0;
 	}
 	n += -n & PAGE_SIZE-1;
@@ -284,7 +293,7 @@ static int adjust_size(size_t *n)
 	/* Result of pointer difference must fit in ptrdiff_t. */
 	if (*n-1 > PTRDIFF_MAX - SIZE_ALIGN - PAGE_SIZE) {
 		if (*n) {
-			errno = ENOMEM;
+			set_errno(ENOMEM);
 			return -1;
 		} else {
 			*n = SIZE_ALIGN;
@@ -555,14 +564,14 @@ void __bin_chunk(struct chunk *self)
 	if (size > RECLAIM && (size^(size-osize)) > size-osize) {
 		uintptr_t a = (uintptr_t)self + SIZE_ALIGN+PAGE_SIZE-1 & -PAGE_SIZE;
 		uintptr_t b = (uintptr_t)next - SIZE_ALIGN & -PAGE_SIZE;
-		int e = errno;
+		int e = get_errno();
 #if 1
 		__madvise((void *)a, b-a, MADV_DONTNEED);
 #else
 		__mmap((void *)a, b-a, PROT_READ|PROT_WRITE,
 			MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED, -1, 0);
 #endif
-		errno = e;
+		set_errno(e);
 	}
 #endif
 
@@ -579,9 +588,9 @@ static void unmap_chunk(struct chunk *self)
 	size_t len = CHUNK_SIZE(self) + extra;
 	/* Crash on double free */
 	if (extra & 1) a_crash();
-	int e = errno;
+	int e = get_errno();
 	__munmap(base, len);
-	errno = e;
+	set_errno(e);
 }
 
 #ifdef __CHEERP__
