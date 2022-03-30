@@ -16,6 +16,15 @@
 //#define realloc __libc_realloc
 //#define free __libc_free
 
+int get_errno()
+{
+	return errno;
+}
+void set_errno(int e)
+{
+	set_errno(e);
+}
+
 #if defined(__GNUC__) && defined(__PIC__)
 #define inline inline __attribute__((always_inline))
 #endif
@@ -204,7 +213,7 @@ static void *__expand_heap(size_t *pn)
 	size_t n = *pn;
 
 	if (n > SIZE_MAX/2 - PAGE_SIZE) {
-		errno = ENOMEM;
+		set_errno(ENOMEM);
 		return 0;
 	}
 	n += -n & PAGE_SIZE-1;
@@ -284,7 +293,7 @@ static int adjust_size(size_t *n)
 	/* Result of pointer difference must fit in ptrdiff_t. */
 	if (*n-1 > PTRDIFF_MAX - SIZE_ALIGN - PAGE_SIZE) {
 		if (*n) {
-			errno = ENOMEM;
+			set_errno(ENOMEM);
 			return -1;
 		} else {
 			*n = SIZE_ALIGN;
