@@ -11,6 +11,7 @@ weak void webMain()
 }
 void __cheerp_constructors(void);
 
+__attribute__((constructor(0)))
 void __cheerp_init_tp()
 {
 	pthread_t td = __get_tp();
@@ -27,7 +28,6 @@ void __cheerp_init_tp()
 __attribute((cheerp_genericjs))
 void _start()
 {
-	__cheerp_init_tp();
 	__cheerp_constructors();
 	webMain();
 }
