@@ -19,38 +19,53 @@
 #define SIZE_L   2
 #define SIZE_ll  3
 
-static void store_int(void *dest, int size, unsigned long long i)
+#define GET_ARG(ap, kind, type) ({\
+	type _r; \
+	if (kind == -1) { \
+		_r = NULL; \
+	} else if (kind == 0) { \
+		_r = va_arg(ap, type); \
+	} else { \
+		unsigned int i; \
+		va_list ap2; \
+		va_copy(ap2, ap); \
+		for (i=kind; i>1; i--) va_arg(ap2, void *); \
+		_r = va_arg(ap2, type); \
+		va_end(ap2); \
+	} \
+	_r; \
+})
+
+static void store_int(va_list *ap, int kind, int size, unsigned long long i)
 {
-	if (!dest) return;
+	void* dest;
 	switch (size) {
 	case SIZE_hh:
+		dest = GET_ARG(*ap, kind, char*);
+		if (!dest) return;
 		*(char *)dest = i;
 		break;
 	case SIZE_h:
+		dest = GET_ARG(*ap, kind, short*);
+		if (!dest) return;
 		*(short *)dest = i;
 		break;
 	case SIZE_def:
+		dest = GET_ARG(*ap, kind, int*);
+		if (!dest) return;
 		*(int *)dest = i;
 		break;
 	case SIZE_l:
+		dest = GET_ARG(*ap, kind, long*);
+		if (!dest) return;
 		*(long *)dest = i;
 		break;
 	case SIZE_ll:
+		dest = GET_ARG(*ap, kind, long long*);
+		if (!dest) return;
 		*(long long *)dest = i;
 		break;
 	}
-}
-
-static void *arg_n(va_list ap, unsigned int n)
-{
-	void *p;
-	unsigned int i;
-	va_list ap2;
-	va_copy(ap2, ap);
-	for (i=n; i>1; i--) va_arg(ap2, void *);
-	p = va_arg(ap2, void *);
-	va_end(ap2);
-	return p;
 }
 
 int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
@@ -73,6 +88,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 	unsigned char scanset[257];
 	size_t i, k;
 	wchar_t wc;
+	int arg_kind;
 
 	FLOCK(f);
 
@@ -110,11 +126,11 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 
 		p++;
 		if (*p=='*') {
-			dest = 0; p++;
+			arg_kind = -1; p++;
 		} else if (isdigit(*p) && p[1]=='$') {
-			dest = arg_n(ap, *p-'0'); p+=2;
+			arg_kind = *p-'0'; p+=2;
 		} else {
-			dest = va_arg(ap, void *);
+			arg_kind = 0;
 		}
 
 		for (width=0; isdigit(*p); p++) {
@@ -124,7 +140,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		if (*p=='m') {
 			wcs = 0;
 			s = 0;
-			alloc = !!dest;
+			alloc = 1;
 			p++;
 		} else {
 			alloc = 0;
@@ -176,7 +192,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		case '[':
 			break;
 		case 'n':
-			store_int(dest, size, pos);
+			store_int(&ap, arg_kind, size, pos);
 			/* do not increment match count, etc! */
 			continue;
 		default:
@@ -225,6 +241,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 			i = 0;
 			k = t=='c' ? width+1U : 31;
 			if (size == SIZE_l) {
+				dest = GET_ARG(ap, arg_kind, wchar_t*);
 				if (alloc) {
 					wcs = malloc(k*sizeof(wchar_t));
 					if (!wcs) goto alloc_fail;
@@ -249,6 +266,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 				}
 				if (!mbsinit(&st)) goto input_fail;
 			} else if (alloc) {
+				dest = GET_ARG(ap, arg_kind, char*);
 				s = malloc(k);
 				if (!s) goto alloc_fail;
 				while (scanset[(c=shgetc(f))+1]) {
@@ -260,7 +278,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 						s = tmp;
 					}
 				}
-			} else if ((s = dest)) {
+			} else if ((s = dest = GET_ARG(ap, arg_kind, char*))) {
 				while (scanset[(c=shgetc(f))+1])
 					s[i++] = c;
 			} else {
@@ -295,8 +313,8 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		int_common:
 			x = __intscan(f, base, 0, ULLONG_MAX);
 			if (!shcnt(f)) goto match_fail;
-			if (t=='p' && dest) *(void **)dest = (void *)(uintptr_t)x;
-			else store_int(dest, size, x);
+			if (t=='p' && (dest = GET_ARG(ap, arg_kind, void*))) *(void **)dest = (void *)(uintptr_t)x;
+			else store_int(&ap, arg_kind, size, x);
 			break;
 		case 'a': case 'A':
 		case 'e': case 'E':
@@ -306,12 +324,15 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 			if (!shcnt(f)) goto match_fail;
 			if (dest) switch (size) {
 			case SIZE_def:
+				dest = GET_ARG(ap, arg_kind, float*);
 				*(float *)dest = y;
 				break;
 			case SIZE_l:
+				dest = GET_ARG(ap, arg_kind, double*);
 				*(double *)dest = y;
 				break;
 			case SIZE_L:
+				dest = GET_ARG(ap, arg_kind, long double*);
 				*(long double *)dest = y;
 				break;
 			}
