@@ -243,7 +243,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 			if (size == SIZE_l) {
 				dest = GET_ARG(ap, arg_kind, wchar_t*);
 				if (alloc) {
-					wcs = malloc(k*sizeof(wchar_t));
+					wcs = (wchar_t*)malloc(k*sizeof(wchar_t));
 					if (!wcs) goto alloc_fail;
 				} else {
 					wcs = dest;
@@ -259,7 +259,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 					if (wcs) wcs[i++] = wc;
 					if (alloc && i==k) {
 						k+=k+1;
-						wchar_t *tmp = realloc(wcs, k*sizeof(wchar_t));
+						wchar_t *tmp = (wchar_t*)realloc(wcs, k*sizeof(wchar_t));
 						if (!tmp) goto alloc_fail;
 						wcs = tmp;
 					}
@@ -267,13 +267,13 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 				if (!mbsinit(&st)) goto input_fail;
 			} else if (alloc) {
 				dest = GET_ARG(ap, arg_kind, char*);
-				s = malloc(k);
+				s = (char*)malloc(k);
 				if (!s) goto alloc_fail;
 				while (scanset[(c=shgetc(f))+1]) {
 					s[i++] = c;
 					if (i==k) {
 						k+=k+1;
-						char *tmp = realloc(s, k);
+						char *tmp = (char*)realloc(s, k);
 						if (!tmp) goto alloc_fail;
 						s = tmp;
 					}
