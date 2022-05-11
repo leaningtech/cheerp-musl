@@ -65,9 +65,10 @@ EMPTY_LIB_NAMES = m rt pthread crypt util xnet resolv dl
 EMPTY_LIBS = $(EMPTY_LIB_NAMES:%=lib/lib%.a)
 CRT_LIBS = $(addprefix lib/,$(notdir $(CRT_OBJS)))
 STATIC_LIBS = lib/libc.a
+BC_LIBS = lib/libc.bc lib/crt1.bc
 SHARED_LIBS = lib/libc.so
 TOOL_LIBS = lib/musl-gcc.specs
-ALL_LIBS = $(CRT_LIBS) $(STATIC_LIBS) $(SHARED_LIBS) $(EMPTY_LIBS) $(TOOL_LIBS)
+ALL_LIBS = $(CRT_LIBS) $(STATIC_LIBS) $(SHARED_LIBS) $(EMPTY_LIBS) $(TOOL_LIBS) $(BC_LIBS)
 ALL_TOOLS = obj/musl-gcc
 
 WRAPCC_GCC = gcc
@@ -167,6 +168,15 @@ lib/libc.a: $(AOBJS)
 	$(AR) rc $@ $(AOBJS)
 	$(RANLIB) $@
 
+lib/crt1.bc: lib/crt1.o
+	cp lib/crt1.o lib/crt1.bc
+
+lib/libc.bc: $(AOBJS)
+	$(LD) $(AOBJS) -o $@
+	rm -f $@
+	$(AR) rc $@ $(AOBJS)
+	$(RANLIB) $@
+
 $(EMPTY_LIBS):
 	rm -f $@
 	$(AR) rc $@
@@ -214,11 +224,15 @@ $(DESTDIR)$(LDSO_PATHNAME): $(DESTDIR)$(libdir)/libc.so
 
 install-libs: $(ALL_LIBS:lib/%=$(DESTDIR)$(libdir)/%) $(if $(SHARED_LIBS),$(DESTDIR)$(LDSO_PATHNAME),)
 
+install-bc: $(BC_LIBS:lib/%=$(DESTDIR)$(libdir)/%) $(if $(SHARED_LIBS),$(DESTDIR)$(LDSO_PATHNAME),)
+
 install-headers: $(ALL_INCLUDES:include/%=$(DESTDIR)$(includedir)/%)
 
 install-tools: $(ALL_TOOLS:obj/%=$(DESTDIR)$(bindir)/%)
 
 install: install-libs install-headers install-tools
+
+install-cheerp: install-bc install-headers
 
 musl-git-%.tar.gz: .git
 	 git --git-dir=$(srcdir)/.git archive --format=tar.gz --prefix=$(patsubst %.tar.gz,%,$@)/ -o $@ $(patsubst musl-git-%.tar.gz,%,$@)
