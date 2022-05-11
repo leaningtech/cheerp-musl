@@ -338,7 +338,14 @@ powerpc*|ppc*) ARCH=powerpc ;;
 riscv64*) ARCH=riscv64 ;;
 sh[1-9bel-]*|sh|superh*) ARCH=sh ;;
 s390x*) ARCH=s390x ;;
-cheerp*) ARCH=cheerp ;;
+cheerp-wasm)
+  ARCH=cheerp;
+  libdir='$(prefix)/lib/asmjs'
+  ;;
+cheerp)
+  ARCH=cheerp;
+  libdir='$(prefix)/lib/genericjs'
+  ;;
 unknown) fail "$0: unable to detect target arch; try $0 --target=..." ;;
 *) fail "$0: unknown or unsupported target \"$target\"" ;;
 esac
@@ -793,6 +800,7 @@ CFLAGS_C99FSE = $CFLAGS_C99FSE
 CFLAGS_MEMOPS = $CFLAGS_MEMOPS
 CFLAGS_NOSSP = $CFLAGS_NOSSP
 CPPFLAGS = $CPPFLAGS
+LD = $LD
 LDFLAGS = $LDFLAGS
 LDFLAGS_AUTO = $LDFLAGS_AUTO
 CROSS_COMPILE = $CROSS_COMPILE
