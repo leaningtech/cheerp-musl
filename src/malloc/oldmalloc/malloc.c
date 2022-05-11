@@ -22,7 +22,7 @@ int get_errno()
 }
 void set_errno(int e)
 {
-	set_errno(e);
+	errno = e;
 }
 
 #if defined(__GNUC__) && defined(__PIC__)
