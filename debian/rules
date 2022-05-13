@@ -1,0 +1,32 @@
+#!/usr/bin/make -f
+
+DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	RANLIB="/opt/cheerp/bin/llvm-ar s" \
+	AR="/opt/cheerp/bin/llvm-ar" \
+	CC="/opt/cheerp/bin/clang -target cheerp" \
+	LD="/opt/cheerp/bin/llvm-link" \
+	CPPFLAGS="-isystem /opt/cheerp/lib/clang/15.0.0/include" \
+	dh_auto_configure -B build_genericjs -- --target=cheerp --disable-shared --prefix=/opt/cheerp --with-malloc=oldmalloc
+
+	RANLIB="/opt/cheerp/bin/llvm-ar s" \
+	AR="/opt/cheerp/bin/llvm-ar" \
+	CC="/opt/cheerp/bin/clang -target cheerp-wasm" \
+	LD="/opt/cheerp/bin/llvm-link" \
+	CPPFLAGS="-isystem /opt/cheerp/lib/clang/15.0.0/include" \
+	dh_auto_configure -B build_wasm -- --target=cheerp-wasm --disable-shared --prefix=/opt/cheerp --with-malloc=oldmalloc
+
+
+override_dh_auto_build:
+	dh_auto_build -B build_genericjs
+	dh_auto_build -B build_wasm
+
+override_dh_auto_install:
+	cd build_genericjs && make DESTDIR=${PWD}/debian/tmp install-cheerp
+	cd build_wasm && make DESTDIR=${PWD}/debian/tmp install-bc
+
+override_dh_auto_test:
