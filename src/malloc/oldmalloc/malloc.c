@@ -44,9 +44,12 @@ __attribute((cheerp_asmjs))
 
 /* Synchronization tools */
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 static inline void lock(volatile int *lk)
 {
-#if defined(__CHEERP__) && !defined(__ASMJS__)
+#if defined(__CHEERP__)
 #else
 	int need_locks = libc.need_locks;
 	if (need_locks) {
@@ -61,10 +64,13 @@ __attribute((cheerp_asmjs))
 #endif
 static inline void unlock(volatile int *lk)
 {
+#if defined(__CHEERP__)
+#else
 	if (lk[0]) {
 		a_store(lk, 0);
 		if (lk[1]) __wake(lk, 1, 1);
 	}
+#endif
 }
 
 #ifdef __CHEERP__
@@ -178,7 +184,8 @@ void __dump_heap(int x)
 
 static int traverses_stack_p(uintptr_t old, uintptr_t new)
 {
-#if defined(__CHEERP__) && !defined(__ASMJS__)
+#if defined(__CHEERP__)
+	return 0;
 #else
 	const uintptr_t len = 8<<20;
 	uintptr_t a, b;
