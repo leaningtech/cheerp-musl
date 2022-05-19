@@ -237,7 +237,6 @@ static void *__expand_heap(size_t *pn)
 		return (void *)(brk-n);
 	}
 
-#ifndef __CHEERP__
 	size_t min = (size_t)PAGE_SIZE << mmap_step/2;
 	if (n < min) n = min;
 	void *area = __mmap(0, n, PROT_READ|PROT_WRITE,
@@ -246,9 +245,6 @@ static void *__expand_heap(size_t *pn)
 	*pn = n;
 	mmap_step++;
 	return area;
-#else
-	return NULL;
-#endif
 }
 
 #ifdef __CHEERP__
@@ -374,7 +370,6 @@ void *malloc(size_t n)
 
 	if (adjust_size(&n) < 0) return 0;
 
-#ifndef __CHEERP__
 	if (n > MMAP_THRESHOLD) {
 		size_t len = n + OVERHEAD + PAGE_SIZE - 1 & -PAGE_SIZE;
 		char *base = __mmap(0, len, PROT_READ|PROT_WRITE,
@@ -385,7 +380,6 @@ void *malloc(size_t n)
 		c->psize = SIZE_ALIGN - OVERHEAD;
 		return CHUNK_TO_MEM(c);
 	}
-#endif
 
 	i = bin_index_up(n);
 	if (i<63 && (mal.binmap & (1ULL<<i))) {
@@ -566,21 +560,20 @@ void __bin_chunk(struct chunk *self)
 	bin_chunk(self, i);
 	unlock(mal.split_merge_lock);
 
-#ifndef __CHEERP__
 	/* Replace middle of large chunks with fresh zero pages */
 	if (size > RECLAIM && (size^(size-osize)) > size-osize) {
 		uintptr_t a = (uintptr_t)self + SIZE_ALIGN+PAGE_SIZE-1 & -PAGE_SIZE;
 		uintptr_t b = (uintptr_t)next - SIZE_ALIGN & -PAGE_SIZE;
 		int e = get_errno();
 #if 1
-		__madvise((void *)a, b-a, MADV_DONTNEED);
+		memset((void*)a, 0, b-a);
+		//__madvise((void *)a, b-a, MADV_DONTNEED);
 #else
 		__mmap((void *)a, b-a, PROT_READ|PROT_WRITE,
 			MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED, -1, 0);
 #endif
 		set_errno(e);
 	}
-#endif
 
 	unlock_bin(i);
 }
