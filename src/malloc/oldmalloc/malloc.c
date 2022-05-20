@@ -424,6 +424,11 @@ int __malloc_allzerop(void *p)
 	return IS_MMAPPED(MEM_TO_CHUNK(p));
 }
 
+void *__mremap_wrapper(void *old_addr, size_t old_len, size_t new_len, int flags)
+{
+	return __mremap(old_addr, old_len, new_len, flags);
+}
+
 #ifdef __CHEERP__
 __attribute((cheerp_asmjs))
 #endif
@@ -442,7 +447,6 @@ void *realloc(void *p, size_t n)
 
 	if (n<=n0 && n0-n<=DONTCARE) return p;
 
-#ifndef __CHEERP__
 	if (IS_MMAPPED(self)) {
 		size_t extra = self->psize;
 		char *base = (char *)self - extra;
@@ -456,14 +460,13 @@ void *realloc(void *p, size_t n)
 		}
 		newlen = (newlen + PAGE_SIZE-1) & -PAGE_SIZE;
 		if (oldlen == newlen) return p;
-		base = __mremap(base, oldlen, newlen, MREMAP_MAYMOVE);
+		base = __mremap_wrapper(base, oldlen, newlen, MREMAP_MAYMOVE);
 		if (base == (void *)-1)
 			goto copy_realloc;
 		self = (void *)(base + extra);
 		self->csize = newlen - extra;
 		return CHUNK_TO_MEM(self);
 	}
-#endif
 
 	next = NEXT_CHUNK(self);
 
