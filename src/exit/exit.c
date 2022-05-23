@@ -12,13 +12,17 @@ weak_alias(dummy, __funcs_on_exit);
 weak_alias(dummy, __stdio_exit);
 weak_alias(dummy, _fini);
 
+#ifndef __CHEERP__
 extern weak hidden void (*const __fini_array_start)(void), (*const __fini_array_end)(void);
+#endif
 
 static void libc_exit_fini(void)
 {
+#ifndef __CHEERP__
 	uintptr_t a = (uintptr_t)&__fini_array_end;
 	for (; a>(uintptr_t)&__fini_array_start; a-=sizeof(void(*)()))
 		(*(void (**)())(a-sizeof(void(*)())))();
+#endif
 	_fini();
 }
 
