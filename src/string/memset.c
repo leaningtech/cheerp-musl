@@ -33,7 +33,7 @@ weak void *memset(void *dest, int c, size_t n)
 	n -= k;
 	n &= -4;
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !(defined(__CHEERP__) && !defined(__ASMJS__))
 	typedef uint32_t __attribute__((__may_alias__)) u32;
 	typedef uint64_t __attribute__((__may_alias__)) u64;
 
