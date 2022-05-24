@@ -13,7 +13,7 @@ void *memccpy(void *restrict dest, const void *restrict src, int c, size_t n)
 	const unsigned char *s = src;
 
 	c = (unsigned char)c;
-#ifdef __GNUC__
+#if defined(__GNUC__) && !(defined(__CHEERP__) && !defined(__ASMJS__))
 	typedef size_t __attribute__((__may_alias__)) word;
 	word *wd;
 	const word *ws;
