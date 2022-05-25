@@ -8,7 +8,7 @@ long __syscall_exit(long a1,...);
 long __syscall_fork(long a1,...);
 long __syscall_read(long a1,...);
 long __syscall_write(long a1,...);
-long __syscall_open(long a1,...);
+long __syscall_open(long pathname, int flags, ...);
 long __syscall_close(long a1,...);
 long __syscall_waitpid(long a1,...);
 long __syscall_creat(long a1,...);
