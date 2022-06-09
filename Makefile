@@ -173,9 +173,6 @@ lib/crt1.bc: lib/crt1.o
 
 lib/libc.bc: $(AOBJS)
 	$(LD) $(AOBJS) -o $@
-	rm -f $@
-	$(AR) rc $@ $(AOBJS)
-	$(RANLIB) $@
 
 $(EMPTY_LIBS):
 	rm -f $@
