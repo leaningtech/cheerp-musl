@@ -47,6 +47,7 @@ TYPEDEF struct { CHEERP_UNION { int __i[sizeof(long)==8?8:5]; volatile int __vi[
 
 TYPEDEF _Int64 time_t;
 STRUCT timespec { time_t tv_sec; long tv_nsec; };
+STRUCT __IO_FILE  ;
 
 #include <__stddef_max_align_t.h>
 #define __DEFINED_max_align_t
