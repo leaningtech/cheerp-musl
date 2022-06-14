@@ -28,6 +28,7 @@ hidden long __syscall_ret(unsigned long),
 	             syscall_arg_t, syscall_arg_t, syscall_arg_t);
 
 #ifdef __CHEERP__
+#define __syscall0(n) n()
 #define __syscall1(n,a) n(a)
 #define __syscall2(n,a,b) n(a,b)
 #define __syscall3(n,a,b,c) n(a,b,c)
