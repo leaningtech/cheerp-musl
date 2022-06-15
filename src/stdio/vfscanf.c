@@ -322,18 +322,21 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		case 'g': case 'G':
 			y = __floatscan(f, size, 0);
 			if (!shcnt(f)) goto match_fail;
-			if (dest) switch (size) {
+			switch (size) {
 			case SIZE_def:
 				dest = GET_ARG(ap, arg_kind, float*);
-				*(float *)dest = y;
+				if (dest)
+					*(float *)dest = y;
 				break;
 			case SIZE_l:
 				dest = GET_ARG(ap, arg_kind, double*);
-				*(double *)dest = y;
+				if (dest)
+					*(double *)dest = y;
 				break;
 			case SIZE_L:
 				dest = GET_ARG(ap, arg_kind, long double*);
-				*(long double *)dest = y;
+				if (dest)
+					*(long double *)dest = y;
 				break;
 			}
 			break;
