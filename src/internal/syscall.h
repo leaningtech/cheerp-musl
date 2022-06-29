@@ -67,11 +67,17 @@ hidden long __syscall_ret(unsigned long),
 #define __syscall_cp5(n,a,b,c,d,e) (__syscall_cp)(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e),0)
 #define __syscall_cp6(n,a,b,c,d,e,f) (__syscall_cp)(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e),__scc(f))
 
-#define __syscall_cp(...) __SYSCALL_DISP(__syscall_cp,__VA_ARGS__)
 #else // __CHEERP__
-#define __syscall_cp(...) __syscall(__VA_ARGS__)
+#define __syscall_cp0(n) __syscall0(n)
+#define __syscall_cp1(n,a) __syscall1(n,a)
+#define __syscall_cp2(n,a,b) __syscall2(n,a,b)
+#define __syscall_cp3(n,a,b,c) __syscall3(n,a,b,c)
+#define __syscall_cp4(n,a,b,c,d) __syscall4(n,a,b,c,d)
+#define __syscall_cp5(n,a,b,c,d,e) __syscall5(n,a,b,c,d,e)
+#define __syscall_cp6(n,a,b,c,d,e,f) __syscall6(n,a,b,c,d,e,f)
 #endif // __CHEERP__
 
+#define __syscall_cp(...) __SYSCALL_DISP(__syscall_cp,__VA_ARGS__)
 #define syscall_cp(...) __syscall_ret(__syscall_cp(__VA_ARGS__))
 
 #ifdef __CHEERP__
