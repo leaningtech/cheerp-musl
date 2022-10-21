@@ -421,7 +421,11 @@ __attribute((cheerp_asmjs))
 #endif
 int __malloc_allzerop(void *p)
 {
+#ifdef __CHEERP__
+	return 0;
+#else
 	return IS_MMAPPED(MEM_TO_CHUNK(p));
+#endif
 }
 
 void *__mremap_wrapper(void *old_addr, size_t old_len, size_t new_len, int flags)
