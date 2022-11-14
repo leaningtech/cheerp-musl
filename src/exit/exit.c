@@ -24,6 +24,15 @@ static void libc_exit_fini(void)
 
 weak_alias(libc_exit_fini, __libc_exit_fini);
 
+#ifdef __CHEERP__
+// __fini_array* are relevant only for dynamic linking, and are only defined in ldso/dynlink.c
+// native builds will work regardless, but at link-time Cheerp will potentially crash
+// (if libc_exit_fini still happens to be alive)
+hidden void (*const __fini_dummy_initializer)(void) = 0;
+weak_alias(__fini_dummy_initializer, __fini_array_end);
+weak_alias(__fini_dummy_initializer, __fini_array_start);
+#endif
+
 _Noreturn void exit(int code)
 {
 	__funcs_on_exit();
