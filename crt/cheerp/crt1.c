@@ -2,6 +2,12 @@
 #include "pthread_arch.h"
 #include "pthread_impl.h"
 
+// __fini_array* are relevant only for dynamic linking, and are only defined in ldso/dynlink.c
+// native builds will work regardless, but at link-time Cheerp will potentially crash
+// (if libc_exit_fini still happens to be alive)
+hidden void (*const __fini_dummy_initializer)(void) = 0;
+weak_alias(__fini_dummy_initializer, __fini_array_end);
+weak_alias(__fini_dummy_initializer, __fini_array_start);
 
 __attribute__((constructor(0)))
 void __cheerp_init_tp()
