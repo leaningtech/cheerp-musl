@@ -91,15 +91,9 @@ static inline void a_crash()
 #define a_ctz_64 a_ctz_64
 static inline int a_ctz_64(uint64_t x)
 {
-	int ret = 0;
 	if (x == 0)
 		return 64;
-	while((x&0x1ll) == 0ll)
-	{
-		ret++;
-		x = x >> 1;
-	}
-	return ret;
+	return __builtin_ctzll(x);
 //	int r;
 //	__asm__( "bsf %1,%0 ; jnz 1f ; bsf %2,%0 ; add $32,%0\n1:"
 //		: "=&r"(r) : "r"((unsigned)x), "r"((unsigned)(x>>32)) );
@@ -109,15 +103,9 @@ static inline int a_ctz_64(uint64_t x)
 #define a_ctz_32 a_ctz_32
 static inline int a_ctz_32(uint32_t x)
 {
-	int ret = 0;
 	if (x == 0)
 		return 32;
-	while((x&0x1) == 0)
-	{
-		ret++;
-		x = x >> 1;
-	}
-	return ret;
+	return __builtin_ctzl(x);
 //	int r;
 //	__asm__( "bsf %1,%0" : "=r"(r) : "r"(x) );
 //	return r;
