@@ -109,7 +109,7 @@ struct meta *alloc_meta(void)
 		if ((uintptr_t)p & (pagesize-1)) need_unprotect = 0;
 		if (need_unprotect)
 			if (mprotect(p, pagesize, PROT_READ|PROT_WRITE)
-			    && errno != ENOSYS)
+			    && get_errno() != ENOSYS)
 				return 0;
 		ctx.avail_meta_area_count--;
 		ctx.avail_meta_areas = p + 4096;

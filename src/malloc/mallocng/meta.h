@@ -6,6 +6,16 @@
 #include <limits.h>
 #include "glue.h"
 
+static int get_errno()
+{
+	return errno;
+}
+
+static void set_errno(int e)
+{
+	errno = e;
+}
+
 __attribute__((__visibility__("hidden")))
 #ifdef __CHEERP__
 __attribute__((cheerp_asmjs))
@@ -316,7 +326,7 @@ __attribute__((cheerp_asmjs))
 static inline int size_overflows(size_t n)
 {
 	if (n >= SIZE_MAX/2 - 4096) {
-		errno = ENOMEM;
+		set_errno(ENOMEM);
 		return 1;
 	}
 	return 0;

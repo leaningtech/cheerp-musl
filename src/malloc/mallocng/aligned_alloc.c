@@ -9,17 +9,17 @@ __attribute__((cheerp_asmjs))
 void *aligned_alloc(size_t align, size_t len)
 {
 	if ((align & -align) != align) {
-		errno = EINVAL;
+		set_errno(EINVAL);
 		return 0;
 	}
 
 	if (len > SIZE_MAX - align || align >= (1ULL<<31)*UNIT) {
-		errno = ENOMEM;
+		set_errno(ENOMEM);
 		return 0;
 	}
 
 	if (DISABLE_ALIGNED_ALLOC) {
-		errno = ENOMEM;
+		set_errno(ENOMEM);
 		return 0;
 	}
 
