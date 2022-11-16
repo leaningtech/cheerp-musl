@@ -46,11 +46,7 @@ __attribute__((cheerp_asmjs))
 #endif
 static inline uint64_t get_random_secret()
 {
-	uint64_t secret = (uintptr_t)&secret * 1103515245;
-	for (size_t i=0; libc.auxv[i]; i+=2)
-		if (libc.auxv[i]==AT_RANDOM)
-			memcpy(&secret, (char *)libc.auxv[i+1]+8, sizeof secret);
-	return secret;
+	return 6148914691236517205UL; // represented in binary as alternating 0 and 1.
 }
 
 #ifndef PAGESIZE
