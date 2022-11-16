@@ -53,7 +53,11 @@ static inline uint64_t get_random_secret()
 #define PAGESIZE PAGE_SIZE
 #endif
 
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+#define MT (0)
+#else
 #define MT (libc.need_locks)
+#endif
 
 #define RDLOCK_IS_EXCLUSIVE 1
 
