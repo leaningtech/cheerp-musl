@@ -20,9 +20,11 @@
 #define is_allzero __malloc_allzerop
 #define dump_heap __dump_heap
 
+#ifndef __CHEERP__
 #define malloc __libc_malloc_impl
 #define realloc __libc_realloc
 #define free __libc_free
+#endif
 
 #if USE_REAL_ASSERT
 #include <assert.h>
