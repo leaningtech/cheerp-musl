@@ -292,6 +292,9 @@ static struct meta *alloc_group(int sc, size_t req)
 			return 0;
 		}
 		struct meta *g = ctx.active[j];
+		// CHEERP: set this byte to zero, because the code assumes memory
+		// returned by mmap is zeroed, and in our case it is not.
+		*(char*)(g->mem->storage + get_stride(g) * idx - 4) = 0;
 		p = enframe(g, idx, UNIT*size_classes[j]-IB, ctx.mmap_counter);
 		m->maplen = 0;
 		p[-3] = (p[-3]&31) | (6<<5);
@@ -409,6 +412,10 @@ void *malloc(size_t n)
 
 success:
 	ctr = ctx.mmap_counter;
+	// CHEERP: set these bytes to zero, because the code assumes memory
+	// returned by mmap is zeroed, and in our case it is not.
+	*(char*)(g->mem->storage + get_stride(g) * idx - 4) = 0;
+	*(char*)(g->mem->storage + get_stride(g) * (idx + 1) - 4) = 0;
 	unlock();
 	return enframe(g, idx, n, ctr);
 }
