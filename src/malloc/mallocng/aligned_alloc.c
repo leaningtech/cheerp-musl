@@ -1,7 +1,11 @@
+#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <errno.h>
 #include "meta.h"
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 void *aligned_alloc(size_t align, size_t len)
 {
 	if ((align & -align) != align) {

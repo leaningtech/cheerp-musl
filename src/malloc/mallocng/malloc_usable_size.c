@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include "meta.h"
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 size_t malloc_usable_size(void *p)
 {
 	if (!p) return 0;

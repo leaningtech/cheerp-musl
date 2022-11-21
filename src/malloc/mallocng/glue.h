@@ -39,6 +39,9 @@
 
 #define DISABLE_ALIGNED_ALLOC (__malloc_replaced && !__aligned_alloc_replaced)
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static inline uint64_t get_random_secret()
 {
 	uint64_t secret = (uintptr_t)&secret * 1103515245;
@@ -57,32 +60,53 @@ static inline uint64_t get_random_secret()
 #define RDLOCK_IS_EXCLUSIVE 1
 
 __attribute__((__visibility__("hidden")))
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 extern int __malloc_lock[1];
 
 #define LOCK_OBJ_DEF \
 int __malloc_lock[1]; \
 void __malloc_atfork(int who) { malloc_atfork(who); }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static inline void rdlock()
 {
 	if (MT) LOCK(__malloc_lock);
 }
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static inline void wrlock()
 {
 	if (MT) LOCK(__malloc_lock);
 }
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static inline void unlock()
 {
 	UNLOCK(__malloc_lock);
 }
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static inline void upgradelock()
 {
 }
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static inline void resetlock()
 {
 	__malloc_lock[0] = 0;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static inline void malloc_atfork(int who)
 {
 	if (who<0) rdlock();

@@ -1,9 +1,13 @@
 #define _GNU_SOURCE
+#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <string.h>
 #include "meta.h"
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 void *realloc(void *p, size_t n)
 {
 	if (!p) return malloc(n);

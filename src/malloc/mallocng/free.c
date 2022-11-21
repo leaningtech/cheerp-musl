@@ -1,16 +1,27 @@
+#define INTERNAL_MUSL
 #define _BSD_SOURCE
 #include <stdlib.h>
 #include <sys/mman.h>
 
 #include "meta.h"
 
-struct mapinfo {
+struct
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
+mapinfo {
 	void *base;
 	size_t len;
 };
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static struct mapinfo nontrivial_free(struct meta *, int);
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static struct mapinfo free_group(struct meta *g)
 {
 	struct mapinfo mi = { 0 };
@@ -35,6 +46,9 @@ static struct mapinfo free_group(struct meta *g)
 	return mi;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static int okay_to_free(struct meta *g)
 {
 	int sc = g->sizeclass;
@@ -69,6 +83,9 @@ static int okay_to_free(struct meta *g)
 	return 0;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static struct mapinfo nontrivial_free(struct meta *g, int i)
 {
 	uint32_t self = 1u<<i;
@@ -98,6 +115,9 @@ static struct mapinfo nontrivial_free(struct meta *g, int i)
 	return (struct mapinfo){ 0 };
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 void free(void *p)
 {
 	if (!p) return;

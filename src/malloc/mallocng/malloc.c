@@ -1,3 +1,4 @@
+#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <stdint.h>
 #include <limits.h>
@@ -7,8 +8,14 @@
 
 #include "meta.h"
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 LOCK_OBJ_DEF;
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 const uint16_t size_classes[] = {
 	1, 2, 3, 4, 5, 6, 7, 8,
 	9, 10, 12, 15,
@@ -23,6 +30,9 @@ const uint16_t size_classes[] = {
 	4680, 5460, 6552, 8191,
 };
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static const uint8_t small_cnt_tab[][3] = {
 	{ 30, 30, 30 },
 	{ 31, 15, 15 },
@@ -35,10 +45,19 @@ static const uint8_t small_cnt_tab[][3] = {
 	{ 28, 14, 6 },
 };
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static const uint8_t med_cnt_tab[4] = { 28, 24, 20, 32 };
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 struct malloc_context ctx = { 0 };
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 struct meta *alloc_meta(void)
 {
 	struct meta *m;
@@ -111,6 +130,9 @@ struct meta *alloc_meta(void)
 	return m;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static uint32_t try_avail(struct meta **pm)
 {
 	struct meta *m = *pm;
@@ -169,8 +191,14 @@ static uint32_t try_avail(struct meta **pm)
 	return first;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static int alloc_slot(int, size_t);
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static struct meta *alloc_group(int sc, size_t req)
 {
 	size_t size = UNIT*size_classes[sc];
@@ -283,6 +311,9 @@ static struct meta *alloc_group(int sc, size_t req)
 	return m;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 static int alloc_slot(int sc, size_t req)
 {
 	uint32_t first = try_avail(&ctx.active[sc]);
@@ -296,6 +327,9 @@ static int alloc_slot(int sc, size_t req)
 	return 0;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 void *malloc(size_t n)
 {
 	if (size_overflows(n)) return 0;
@@ -379,9 +413,16 @@ success:
 	return enframe(g, idx, n, ctr);
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_asmjs))
+#endif
 int is_allzero(void *p)
 {
+#ifdef __CHEERP__
+	return 0;
+#else
 	struct meta *g = get_meta(p);
 	return g->sizeclass >= 48 ||
 		get_stride(g) < UNIT*size_classes[g->sizeclass];
+#endif
 }
