@@ -9,7 +9,7 @@ hidden void __vm_unlock(void);
 
 hidden void *__mmap(void *, size_t, int, int, int, off_t);
 hidden int __munmap(void *, size_t);
-hidden void *__mremap(void *, size_t, size_t, int, ...);
+hidden void *__mremap(void *, size_t, size_t, int);
 #ifdef __CHEERP__
 __attribute__((cheerp_wasm))
 #endif

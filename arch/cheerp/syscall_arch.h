@@ -167,7 +167,7 @@ long __syscall_sched_get_priority_max(long a1,...);
 long __syscall_sched_get_priority_min(long a1,...);
 long __syscall_sched_rr_get_interval(long a1,...);
 long __syscall_nanosleep(long a1,...);
-long __syscall_mremap(long old_addr, long old_len, long new_len, long flags, long new_addr);
+long __syscall_mremap(long old_addr, long old_len, long new_len, long flags);
 long __syscall_setresuid(long a1,...);
 long __syscall_getresuid(long a1,...);
 long __syscall_vm86(long a1,...);
