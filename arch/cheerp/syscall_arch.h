@@ -223,7 +223,7 @@ long __syscall_setfsuid32(long a1,...);
 long __syscall_setfsgid32(long a1,...);
 long __syscall_pivot_root(long a1,...);
 long __syscall_mincore(long a1,...);
-long __syscall_madvise(long addr, long length, long advice);
+long __syscall_madvise(void* addr, long length, long advice);
 long __syscall_getdents64(long a1,...);
 long __syscall_fcntl64(long a1,...);
 long __syscall_gettid();
