@@ -32,9 +32,15 @@ static int traverses_stack_p(uintptr_t old, uintptr_t new)
 	return 0;
 }
 
+#ifdef __CHEERP__
+__attribute__((cheerp_wasm))
+#endif
 static volatile int lock[1];
 volatile int *const __bump_lockptr = lock;
 
+#ifdef __CHEERP__
+__attribute__((cheerp_wasm))
+#endif
 static void *__simple_malloc(size_t n)
 {
 	static uintptr_t brk, cur, end;

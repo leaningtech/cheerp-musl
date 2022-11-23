@@ -1,6 +1,9 @@
 #include <sys/mman.h>
 #include "syscall.h"
 
+#ifdef __CHEERP__
+__attribute((cheerp_wasm))
+#endif
 int __madvise(void *addr, size_t len, int advice)
 {
 

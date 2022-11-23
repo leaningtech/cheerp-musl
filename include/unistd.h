@@ -157,6 +157,9 @@ unsigned ualarm(unsigned, unsigned);
 #define L_INCR 1
 #define L_XTND 2
 int brk(void *);
+#ifdef __CHEERP__
+__attribute__((cheerp_wasm))
+#endif
 void *sbrk(intptr_t);
 pid_t vfork(void);
 int vhangup(void);
