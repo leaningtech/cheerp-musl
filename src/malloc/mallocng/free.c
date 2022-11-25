@@ -140,9 +140,9 @@ void free(void *p)
 		unsigned char *base = start + (-(uintptr_t)start & (PGSZ-1));
 		size_t len = (end-base) & -PGSZ;
 		if (len) {
-			int e = errno;
+			int e = get_errno();
 			madvise(base, len, MADV_FREE);
-			errno = e;
+			set_errno(e);
 		}
 	}
 
@@ -164,8 +164,8 @@ void free(void *p)
 	struct mapinfo mi = nontrivial_free(g, idx);
 	unlock();
 	if (mi.len) {
-		int e = errno;
+		int e = get_errno();
 		munmap(mi.base, mi.len);
-		errno = e;
+		set_errno(e);
 	}
 }
