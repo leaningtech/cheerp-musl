@@ -11,14 +11,14 @@ override_dh_auto_configure:
 	CC="/opt/cheerp/bin/clang -target cheerp" \
 	LD="/opt/cheerp/bin/llvm-link" \
 	CPPFLAGS="-isystem /opt/cheerp/lib/clang/15.0.0/include" \
-	dh_auto_configure -B build_genericjs -- --target=cheerp --disable-shared --prefix=/opt/cheerp --with-malloc=oldmalloc
+	dh_auto_configure -B build_genericjs -- --target=cheerp --disable-shared --prefix=/opt/cheerp --with-malloc=mallocng
 
 	RANLIB="/opt/cheerp/bin/llvm-ar s" \
 	AR="/opt/cheerp/bin/llvm-ar" \
 	CC="/opt/cheerp/bin/clang -target cheerp-wasm" \
 	LD="/opt/cheerp/bin/llvm-link" \
 	CPPFLAGS="-isystem /opt/cheerp/lib/clang/15.0.0/include" \
-	dh_auto_configure -B build_wasm -- --target=cheerp-wasm --disable-shared --prefix=/opt/cheerp --with-malloc=oldmalloc
+	dh_auto_configure -B build_wasm -- --target=cheerp-wasm --disable-shared --prefix=/opt/cheerp --with-malloc=mallocng
 
 
 override_dh_auto_build:
