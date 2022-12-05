@@ -70,6 +70,11 @@ static inline void a_store(volatile int *p, int x)
 //		: "=m"(*p) : "r"(x) : "memory" );
 }
 
+static inline _Noreturn unreachable()
+{
+	__builtin_unreachable();
+}
+
 #define a_barrier a_barrier
 static inline void a_barrier()
 {
@@ -85,6 +90,7 @@ static inline void a_spin()
 #define a_crash a_crash
 static inline void a_crash()
 {
+	unreachable();
 //	__asm__ __volatile__( "hlt" : : : "memory" );
 }
 
