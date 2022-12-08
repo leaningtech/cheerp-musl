@@ -70,7 +70,7 @@ static inline void a_store(volatile int *p, int x)
 //		: "=m"(*p) : "r"(x) : "memory" );
 }
 
-static inline _Noreturn unreachable()
+static inline _Noreturn void unreachable()
 {
 	__builtin_unreachable();
 }
