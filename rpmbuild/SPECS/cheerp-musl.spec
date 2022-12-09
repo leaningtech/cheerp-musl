@@ -21,12 +21,12 @@ combination of JavaScript, WebAssembly and Asm.js from a single C++ codebase.
 
 mkdir -p build_genericjs
 cd build_genericjs
-CHEERP_PREFIX=/opt/cheerp RANLIB="${CHEERP_PREFIX}/bin/llvm-ar s" AR="${CHEERP_PREFIX}/bin/llvm-ar" CC="${CHEERP_PREFIX}/bin/clang -target cheerp" LD="${CHEERP_PREFIX}/bin/llvm-link" CPPFLAGS="-isystem ${CHEERP_PREFIX}/lib/clang/15.0.0/include" ../configure --target=cheerp --disable-shared --prefix=${CHEERP_PREFIX}
+CHEERP_PREFIX=/opt/cheerp RANLIB="${CHEERP_PREFIX}/bin/llvm-ar s" AR="${CHEERP_PREFIX}/bin/llvm-ar" CC="${CHEERP_PREFIX}/bin/clang -target cheerp" LD="${CHEERP_PREFIX}/bin/llvm-link" CPPFLAGS="-isystem ${CHEERP_PREFIX}/lib/clang/16/include" ../configure --target=cheerp --disable-shared --prefix=${CHEERP_PREFIX}
 cd ..
 
 mkdir -p build_wasm
 cd build_wasm
-CHEERP_PREFIX=/opt/cheerp RANLIB="${CHEERP_PREFIX}/bin/llvm-ar s" AR="${CHEERP_PREFIX}/bin/llvm-ar" CC="${CHEERP_PREFIX}/bin/clang -target cheerp-wasm" LD="${CHEERP_PREFIX}/bin/llvm-link" CPPFLAGS="-isystem ${CHEERP_PREFIX}/lib/clang/15.0.0/include" ../configure --target=cheerp-wasm --disable-shared --prefix=${CHEERP_PREFIX}
+CHEERP_PREFIX=/opt/cheerp RANLIB="${CHEERP_PREFIX}/bin/llvm-ar s" AR="${CHEERP_PREFIX}/bin/llvm-ar" CC="${CHEERP_PREFIX}/bin/clang -target cheerp-wasm" LD="${CHEERP_PREFIX}/bin/llvm-link" CPPFLAGS="-isystem ${CHEERP_PREFIX}/lib/clang/16/include" ../configure --target=cheerp-wasm --disable-shared --prefix=${CHEERP_PREFIX}
 
 
 %build
