@@ -10,6 +10,7 @@ AR="${CHEERP_PREFIX}/bin/llvm-ar" \
 CC="${CHEERP_PREFIX}/bin/clang -target cheerp" \
 LD="${CHEERP_PREFIX}/bin/llvm-link" \
 CPPFLAGS="-isystem ${CHEERP_PREFIX}/lib/clang/16/include" \
+CFLAGS="-Wno-int-conversion" \
 ../configure --target=cheerp --disable-shared --prefix=${CHEERP_PREFIX}
 make
 make install-cheerp
@@ -22,6 +23,7 @@ AR="${CHEERP_PREFIX}/bin/llvm-ar" \
 CC="${CHEERP_PREFIX}/bin/clang -target cheerp-wasm" \
 LD="${CHEERP_PREFIX}/bin/llvm-link" \
 CPPFLAGS="-isystem ${CHEERP_PREFIX}/lib/clang/16/include" \
+CFLAGS="-Wno-int-conversion" \
 ../configure --target=cheerp-wasm --disable-shared --prefix=${CHEERP_PREFIX}
 make
 make install-bc
