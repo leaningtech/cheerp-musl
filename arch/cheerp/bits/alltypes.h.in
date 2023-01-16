@@ -49,5 +49,12 @@ TYPEDEF _Int64 time_t;
 STRUCT timespec { time_t tv_sec; long tv_nsec; };
 STRUCT __IO_FILE  ;
 
-#include <__stddef_max_align_t.h>
+#if !defined(__cplusplus)
+TYPEDEF struct { _Alignas(8) long long __ll; long double __ld; } max_align_t;
+#elif defined(__GNUC__)
+TYPEDEF struct { __attribute__((__aligned__(8))) long long __ll; long double __ld; } max_align_t;
+#else
+TYPEDEF struct { alignas(8) long long __ll; long double __ld; } max_align_t;
+#endif
+
 #define __DEFINED_max_align_t

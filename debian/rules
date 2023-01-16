@@ -10,7 +10,6 @@ override_dh_auto_configure:
 	AR="/opt/cheerp/bin/llvm-ar" \
 	CC="/opt/cheerp/bin/clang -target cheerp" \
 	LD="/opt/cheerp/bin/llvm-link" \
-	CPPFLAGS="-isystem /opt/cheerp/lib/clang/16/include" \
 	CFLAGS="-Wno-int-conversion" \
 	dh_auto_configure -B build_genericjs -- --target=cheerp --disable-shared --prefix=/opt/cheerp
 
@@ -18,7 +17,6 @@ override_dh_auto_configure:
 	AR="/opt/cheerp/bin/llvm-ar" \
 	CC="/opt/cheerp/bin/clang -target cheerp-wasm" \
 	LD="/opt/cheerp/bin/llvm-link" \
-	CPPFLAGS="-isystem /opt/cheerp/lib/clang/16/include" \
 	CFLAGS="-Wno-int-conversion" \
 	dh_auto_configure -B build_wasm -- --target=cheerp-wasm --disable-shared --prefix=/opt/cheerp
 
