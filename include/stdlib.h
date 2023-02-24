@@ -111,6 +111,9 @@ size_t __ctype_get_mb_cur_max(void);
 #define WIFSTOPPED(s) ((short)((((s)&0xffff)*0x10001)>>8) > 0x7f00)
 #define WIFSIGNALED(s) (((s)&0xffff)-1U < 0xffu)
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 int posix_memalign (void **, size_t, size_t);
 int setenv (const char *, const char *, int);
 int unsetenv (const char *);
@@ -154,7 +157,13 @@ void lcong48 (unsigned short [7]);
 char *mktemp (char *);
 int mkstemps (char *, int);
 int mkostemps (char *, int, int);
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void *valloc (size_t);
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void *memalign(size_t, size_t);
 int getloadavg(double *, int);
 int clearenv(void);
