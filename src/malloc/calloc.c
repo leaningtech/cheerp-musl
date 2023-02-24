@@ -43,6 +43,7 @@ weak_alias(allzerop, __malloc_allzerop);
 #ifdef __CHEERP__
 __attribute((cheerp_asmjs))
 #endif
+weak
 void *calloc(size_t m, size_t n)
 {
 	if (n && m > (size_t)-1/n) {
