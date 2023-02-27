@@ -30,7 +30,7 @@ static inline void* __sbrk(int size)
 
 #define USE_LOCKS 0
 
-#define MALLOC_ALIGNMENT (__alignof__(max_align_t))
+#define MALLOC_ALIGNMENT 8
 
 #include <errno.h>
 static inline void set_errno()
