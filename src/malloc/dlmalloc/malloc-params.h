@@ -5,24 +5,11 @@
 #define malloc_getpagesize (64*1024)
 #define DEFAULT_GRANULARITY malloc_getpagesize
 
-#include "syscall.h"
-
+#ifdef __CHEERP__
 __attribute__((cheerp_wasm))
-static inline void* __sbrk(int size)
-{
-	static char* end = 0;
-	if (!end)
-	{
-		end = (char*)SYS_brk(0);
-	}
-	char* ret = (char*)SYS_brk(end+size);
-	if (ret < end + size)
-		return (char*)-1;
-	char* base = end;
-	end += size;
-	return base;
-}
-#define MORECORE __sbrk
+#endif
+void* dlmalloc_morecore(int size);
+#define MORECORE dlmalloc_morecore
 
 #define ABORT __builtin_unreachable()
 #define NO_MALLOC_STATS 1
