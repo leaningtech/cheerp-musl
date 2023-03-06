@@ -1,3 +1,4 @@
-Name: cheerp-musl
-Maintainer: Alessandro Pignotti <alessandro@leaningtech.com>
-Copyright: 2013, Alessandro Pignotti <alessandro@leaningtech.com>
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Cheerp Musl
+Copyright: 2013-2023, Leaning Technologies
+License: MIT

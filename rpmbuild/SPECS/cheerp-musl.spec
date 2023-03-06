@@ -1,5 +1,5 @@
 Name: cheerp-musl
-Version: 2.5
+Version: 3.0
 Release:        1%{?dist}
 Summary: A C++ compiler for the Web, C library implementation
 
