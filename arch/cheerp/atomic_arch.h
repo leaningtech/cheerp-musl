@@ -64,7 +64,7 @@ static inline void a_dec(volatile int *p)
 #define a_store a_store
 static inline void a_store(volatile int *p, int x)
 {
-	__atomic_store(p, x, __ATOMIC_SEQ_CST);
+	__atomic_store(p, &x, __ATOMIC_SEQ_CST);
 //	__asm__ __volatile__(
 //		"mov %1, %0 ; lock ; orl $0,(%%esp)"
 //		: "=m"(*p) : "r"(x) : "memory" );
