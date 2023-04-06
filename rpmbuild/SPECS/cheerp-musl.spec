@@ -42,10 +42,26 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 /opt/cheerp/lib/genericjs/libc.bc
+/opt/cheerp/lib/genericjs/libm.a
 /opt/cheerp/lib/genericjs/crt1.bc
+/opt/cheerp/lib/genericjs/libcrypt.a
+/opt/cheerp/lib/genericjs/libdl.a
+/opt/cheerp/lib/genericjs/libpthread.a
+/opt/cheerp/lib/genericjs/libresolv.a
+/opt/cheerp/lib/genericjs/librt.a
+/opt/cheerp/lib/genericjs/libutil.a
+/opt/cheerp/lib/genericjs/libxnet.a
 /opt/cheerp/include/
 /opt/cheerp/lib/asmjs/crt1.bc
 /opt/cheerp/lib/asmjs/libc.bc
+/opt/cheerp/lib/asmjs/libm.a
+/opt/cheerp/lib/asmjs/libcrypt.a
+/opt/cheerp/lib/asmjs/libdl.a
+/opt/cheerp/lib/asmjs/libpthread.a
+/opt/cheerp/lib/asmjs/libresolv.a
+/opt/cheerp/lib/asmjs/librt.a
+/opt/cheerp/lib/asmjs/libutil.a
+/opt/cheerp/lib/asmjs/libxnet.a
 
 %changelog
 * Tue Dec 10 2019 Yuri Iozzelli <yuri@leaningtech.com>

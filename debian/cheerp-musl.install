@@ -1,4 +1,5 @@
 /opt/cheerp/lib/genericjs/libc.bc
+/opt/cheerp/lib/genericjs/libm.a
 /opt/cheerp/lib/genericjs/crt1.bc
 /opt/cheerp/include/aio.h
 /opt/cheerp/include/alloca.h
@@ -220,3 +221,4 @@
 /opt/cheerp/include/wordexp.h
 /opt/cheerp/lib/asmjs/crt1.bc
 /opt/cheerp/lib/asmjs/libc.bc
+/opt/cheerp/lib/asmjs/libm.a

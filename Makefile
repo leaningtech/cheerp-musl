@@ -65,7 +65,7 @@ EMPTY_LIB_NAMES = m rt pthread crypt util xnet resolv dl
 EMPTY_LIBS = $(EMPTY_LIB_NAMES:%=lib/lib%.a)
 CRT_LIBS = $(addprefix lib/,$(notdir $(CRT_OBJS)))
 STATIC_LIBS = lib/libc.a
-BC_LIBS = lib/libc.bc lib/crt1.bc
+BC_LIBS = lib/libc.bc lib/crt1.bc $(EMPTY_LIBS)
 SHARED_LIBS = lib/libc.so
 TOOL_LIBS = lib/musl-gcc.specs
 ALL_LIBS = $(CRT_LIBS) $(STATIC_LIBS) $(SHARED_LIBS) $(EMPTY_LIBS) $(TOOL_LIBS) $(BC_LIBS)
