@@ -580,6 +580,10 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #endif  /* HAVE_MORECORE */
 #endif  /* DARWIN */
 
+#ifdef __CHEERP__
+#define MMAP_CLEARS 0
+#endif
+
 #ifndef LACKS_SYS_TYPES_H
 #include <sys/types.h>  /* For size_t */
 #endif  /* LACKS_SYS_TYPES_H */
