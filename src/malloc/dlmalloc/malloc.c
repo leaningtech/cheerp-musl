@@ -846,6 +846,22 @@ extern "C" {
 #define dlindependent_calloc   independent_calloc
 #define dlindependent_comalloc independent_comalloc
 #define dlbulk_free            bulk_free
+#else /* USE_DL_PREFIX */
+
+#define CHEERP_DEFINE_MEMFUNC(name, ret, ...) \
+  __attribute__ ((__weak__, alias("dl"#name))) ret name(__VA_ARGS__); \
+  __attribute__ ((alias("dl"#name))) ret __cheerp_##name(__VA_ARGS__);
+
+CHEERP_DEFINE_MEMFUNC(malloc, void*, size_t)
+CHEERP_DEFINE_MEMFUNC(calloc, void*, size_t, size_t)
+CHEERP_DEFINE_MEMFUNC(realloc, void*, void*, size_t)
+CHEERP_DEFINE_MEMFUNC(free, void, void*)
+CHEERP_DEFINE_MEMFUNC(valloc, void*, size_t)
+CHEERP_DEFINE_MEMFUNC(memalign, void*, size_t, size_t)
+CHEERP_DEFINE_MEMFUNC(malloc_usable_size, size_t, void*)
+
+#undef CHEERP_DEFINE_MEMFUNC
+
 #endif /* USE_DL_PREFIX */
 
 /*
