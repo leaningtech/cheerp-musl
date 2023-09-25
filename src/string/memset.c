@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 
-weak void *memset(void *dest, int c, size_t n)
+void *__memset(void *dest, int c, size_t n)
 {
 	unsigned char *s = dest;
 	size_t k;
@@ -88,3 +88,6 @@ weak void *memset(void *dest, int c, size_t n)
 
 	return dest;
 }
+
+__attribute__ ((__weak__, alias("__memset"))) void* memset(void* s, int  c, size_t n);
+__attribute__ ((alias("__memset"))) void* __cheerp_memset(void* s, int  c, size_t n);
