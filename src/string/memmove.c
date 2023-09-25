@@ -6,7 +6,7 @@ typedef __attribute__((__may_alias__)) size_t WT;
 #define WS (sizeof(WT))
 #endif
 
-void *memmove(void *dest, const void *src, size_t n)
+void *__memmove(void *dest, const void *src, size_t n)
 {
 	char *d = dest;
 	const char *s = src;
@@ -40,3 +40,6 @@ void *memmove(void *dest, const void *src, size_t n)
 
 	return dest;
 }
+
+__attribute__ ((__weak__, alias("__memmove"))) void* memmove(void*dest, const void *src, size_t n);
+__attribute__ ((alias("__memmove"))) void* cheerp_memmove(void*dest, const void *src, size_t n);
