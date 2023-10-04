@@ -1,6 +1,6 @@
 #include <string.h>
 
-char *strncat(char *restrict d, const char *restrict s, size_t n)
+char *__strncat(char *restrict d, const char *restrict s, size_t n)
 {
 	char *a = d;
 	d += strlen(d);
@@ -8,3 +8,6 @@ char *strncat(char *restrict d, const char *restrict s, size_t n)
 	*d++ = 0;
 	return a;
 }
+
+__attribute__ ((__weak__, alias("__strncat"))) char *strncat(char *restrict d, const char *restrict s, size_t n);
+__attribute__ ((alias("__strncat"))) char *__cheerp_strncat(char *restrict d, const char *restrict s, size_t n);

@@ -660,7 +660,7 @@ overflow:
 	return -1;
 }
 
-int vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap)
+int __vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap)
 {
 	va_list ap2;
 	int nl_type[NL_ARGMAX+1] = {0};
@@ -700,3 +700,6 @@ int vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap)
 	va_end(ap2);
 	return ret;
 }
+
+__attribute__ ((__weak__, alias("__vfprintf"))) int vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap);
+__attribute__ ((alias("__vfprintf"))) int __cheerp_vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap);

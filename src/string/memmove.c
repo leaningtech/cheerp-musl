@@ -42,4 +42,4 @@ void *__memmove(void *dest, const void *src, size_t n)
 }
 
 __attribute__ ((__weak__, alias("__memmove"))) void* memmove(void*dest, const void *src, size_t n);
-__attribute__ ((alias("__memmove"))) void* cheerp_memmove(void*dest, const void *src, size_t n);
+__attribute__ ((alias("__memmove"))) void* __cheerp_memmove(void*dest, const void *src, size_t n);

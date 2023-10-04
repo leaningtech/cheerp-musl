@@ -32,7 +32,7 @@ static size_t sn_write(FILE *f, const unsigned char *s, size_t l)
 	return l;
 }
 
-int vsnprintf(char *restrict s, size_t n, const char *restrict fmt, va_list ap)
+int __vsnprintf(char *restrict s, size_t n, const char *restrict fmt, va_list ap)
 {
 	unsigned char buf[1];
 	char dummy[1];
@@ -53,3 +53,6 @@ int vsnprintf(char *restrict s, size_t n, const char *restrict fmt, va_list ap)
 	*c.s = 0;
 	return vfprintf(&f, fmt, ap);
 }
+
+__attribute__ ((__weak__, alias("__vsnprintf"))) int vsnprintf(char *restrict s, size_t n, const char *restrict fmt, va_list ap);
+__attribute__ ((alias("__vsnprintf"))) int __cheerp_vsnprintf(char *restrict s, size_t n, const char *restrict fmt, va_list ap);

@@ -33,7 +33,7 @@ unsigned long strtoul(const char *restrict s, char **restrict p, int base)
 	return strtox(s, p, base, ULONG_MAX);
 }
 
-long strtol(const char *restrict s, char **restrict p, int base)
+long __strtol(const char *restrict s, char **restrict p, int base)
 {
 	return strtox(s, p, base, 0UL+LONG_MIN);
 }
@@ -47,6 +47,9 @@ uintmax_t strtoumax(const char *restrict s, char **restrict p, int base)
 {
 	return strtoull(s, p, base);
 }
+
+__attribute__ ((__weak__, alias("__strtol"))) long strtol(const char *restrict s, char **restrict p, int base);
+__attribute__ ((alias("__strtol"))) long __cheerp_strtol(const char *restrict s, char **restrict p, int base);
 
 weak_alias(strtol, __strtol_internal);
 weak_alias(strtoul, __strtoul_internal);

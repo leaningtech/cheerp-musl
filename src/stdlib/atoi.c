@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-int atoi(const char *s)
+int __atoi(const char *s)
 {
 	int n=0, neg=0;
 	while (isspace(*s)) s++;
@@ -14,3 +14,6 @@ int atoi(const char *s)
 		n = 10*n - (*s++ - '0');
 	return neg ? n : -n;
 }
+
+__attribute__ ((__weak__, alias("__atoi"))) int atoi(const char *s);
+__attribute__ ((alias("__atoi"))) int __cheerp_atoi(const char *s);

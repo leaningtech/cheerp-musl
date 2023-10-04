@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "internal.h"
 
-size_t mbsrtowcs(wchar_t *restrict ws, const char **restrict src, size_t wn, mbstate_t *restrict st)
+size_t __mbsrtowcs(wchar_t *restrict ws, const char **restrict src, size_t wn, mbstate_t *restrict st)
 {
 	const unsigned char *s = (const void *)*src;
 	size_t wn0 = wn;
@@ -118,3 +118,6 @@ resume:
 	if (ws) *src = (const void *)s;
 	return -1;
 }
+
+__attribute__ ((__weak__, alias("__mbsrtowcs"))) size_t mbsrtowcs(wchar_t *restrict ws, const char **restrict src, size_t wn, mbstate_t *restrict st);
+__attribute__ ((alias("__mbsrtowcs"))) size_t __cheerp_mbsrtowcs(wchar_t *restrict ws, const char **restrict src, size_t wn, mbstate_t *restrict st);
