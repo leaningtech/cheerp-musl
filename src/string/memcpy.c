@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <endian.h>
 
-weak void *__memcpy(void *restrict dest, const void *restrict src, size_t n)
+void *__memcpy(void *restrict dest, const void *restrict src, size_t n)
 {
 	unsigned char *d = dest;
 	const unsigned char *s = src;
@@ -123,5 +123,5 @@ weak void *__memcpy(void *restrict dest, const void *restrict src, size_t n)
 	return dest;
 }
 
-__attribute__ ((__weak__, alias("__memcpy"))) void* memcpy(void *dest, const void *src, size_t n);
-__attribute__ ((alias("__memcpy"))) void* __cheerp_memcpy(void *dest, const void *src, size_t n);
+__attribute__ ((__weak__, alias("__memcpy"))) void* memcpy(void *restrict dest, const void *restrict src, size_t n);
+__attribute__ ((alias("__memcpy"))) void* __cheerp_memcpy(void *restrict dest, const void *restrict src, size_t n);

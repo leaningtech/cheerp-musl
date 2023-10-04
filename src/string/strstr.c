@@ -135,7 +135,7 @@ static char *twoway_strstr(const unsigned char *h, const unsigned char *n)
 	}
 }
 
-char *strstr(const char *h, const char *n)
+char *__strstr(const char *h, const char *n)
 {
 	/* Return immediately on empty needle */
 	if (!n[0]) return (char *)h;
@@ -152,3 +152,6 @@ char *strstr(const char *h, const char *n)
 
 	return twoway_strstr((void *)h, (void *)n);
 }
+
+__attribute__ ((__weak__, alias("__strstr"))) char *strstr(const char *h, const char *n);
+__attribute__ ((alias("__strstr"))) char *__cheerp_strstr(const char *h, const char *n);

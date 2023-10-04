@@ -7,7 +7,7 @@
 #define HIGHS (ONES * (UCHAR_MAX/2+1))
 #define HASZERO(x) ((x)-ONES & ~(x) & HIGHS)
 
-size_t strlen(const char *s)
+size_t __strlen(const char *s)
 {
 	const char *a = s;
 #if defined(__GNUC__) && !(defined(__CHEERP__) && !defined(__ASMJS__))
@@ -20,3 +20,6 @@ size_t strlen(const char *s)
 	for (; *s; s++);
 	return s-a;
 }
+
+__attribute__ ((__weak__, alias("__strlen"))) size_t strlen(const char *s);
+__attribute__ ((alias("__strlen"))) size_t __cheerp_strlen(const char *s);

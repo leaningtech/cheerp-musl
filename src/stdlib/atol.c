@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-long atol(const char *s)
+long __atol(const char *s)
 {
 	long n=0;
 	int neg=0;
@@ -15,3 +15,6 @@ long atol(const char *s)
 		n = 10*n - (*s++ - '0');
 	return neg ? n : -n;
 }
+
+__attribute__ ((__weak__, alias("__atol"))) long atol(const char *s);
+__attribute__ ((alias("__atol"))) long __cheerp_atol(const char *s);

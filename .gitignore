@@ -6,3 +6,8 @@
 config.mak
 lib/musl-gcc.specs
 /obj/
+/*.ll
+/*.bc
+/build_asmjs
+/build_genericjs
+/build_and_install.sh
