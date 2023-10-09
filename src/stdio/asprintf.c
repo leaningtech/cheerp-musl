@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-int asprintf(char **s, const char *fmt, ...)
+int __asprintf(char **s, const char *fmt, ...)
 {
 	int ret;
 	va_list ap;
@@ -11,3 +11,6 @@ int asprintf(char **s, const char *fmt, ...)
 	va_end(ap);
 	return ret;
 }
+
+__attribute__ ((__weak__, alias("__asprintf"))) int asprintf(char **s, const char *fmt, ...);
+__attribute__ ((alias("__asprintf"))) int __cheerp_asprintf(char **s, const char *fmt, ...);
