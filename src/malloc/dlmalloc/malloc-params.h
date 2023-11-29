@@ -4,6 +4,7 @@
 #define MORECORE_CANNOT_TRIM 1
 #define malloc_getpagesize (64*1024)
 #define DEFAULT_GRANULARITY malloc_getpagesize
+#define USE_DL_PREFIX 1
 
 #ifdef __CHEERP__
 __attribute__((cheerp_wasm))
