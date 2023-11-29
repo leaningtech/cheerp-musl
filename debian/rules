@@ -10,7 +10,7 @@ override_dh_auto_configure:
 	AR="/opt/cheerp/bin/llvm-ar" \
 	CC="/opt/cheerp/bin/clang -target cheerp" \
 	LD="/opt/cheerp/bin/llvm-link" \
-	CFLAGS="-Wno-int-conversion" \
+	CFLAGS="-Wno-int-conversion -DUSE_DL_PREFIX" \
 	dh_auto_configure -B build_genericjs -- --target=cheerp --disable-shared --prefix=/opt/cheerp --with-malloc=dlmalloc
 
 	RANLIB="/opt/cheerp/bin/llvm-ar s" \
