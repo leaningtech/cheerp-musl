@@ -761,7 +761,7 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 /* #define HAVE_USR_INCLUDE_MALLOC_H */
 
 #ifdef __CHEERP__
-#pragma clang attribute push(__attribute__((cheerp_asmjs)), apply_to = any(function,record,enum,variable(is_global)))
+#pragma clang attribute push(__attribute__((cheerp_asmjs)), apply_to = any(function,record,enum,variable(is_global), variable(is_parameter)))
 #endif
 
 #ifdef HAVE_USR_INCLUDE_MALLOC_H
@@ -1651,7 +1651,7 @@ unsigned char _BitScanReverse(unsigned long *index, unsigned long mask);
   ((MALLOC_ALIGNMENT - ((size_t)(A) & CHUNK_ALIGN_MASK)) & CHUNK_ALIGN_MASK))
 
 #ifdef __CHEERP__
-#pragma clang attribute push(__attribute__((cheerp_asmjs)), apply_to = any(function,record,enum,variable(is_global)))
+#pragma clang attribute push(__attribute__((cheerp_asmjs)), apply_to = any(function,record,enum,variable(is_global),variable(is_parameter)))
 #endif
 
 /* -------------------------- MMAP preliminaries ------------------------- */
