@@ -195,7 +195,7 @@ long __syscall_sendfile(long a1,...);
 long __syscall_getpmsg(long a1,...);
 long __syscall_putpmsg(long a1,...);
 long __syscall_vfork(long a1,...);
-long __syscall_ugetrlimit(long a1,...);
+long __syscall_ugetrlimit(long a1, unsigned long* a2);
 long __syscall_mmap2(long a1, long a2, long a3, long a4, long a5, long a6);
 long __syscall_truncate64(long a1,...);
 long __syscall_ftruncate64(long a1, long a2, long a3);
