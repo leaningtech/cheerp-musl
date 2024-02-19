@@ -1,3 +1,4 @@
+#define INTERNAL_MUSL
 #include <string.h>
 
 int memcmp(const void *vl, const void *vr, size_t n)
