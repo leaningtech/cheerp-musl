@@ -1,4 +1,5 @@
 #if !defined(__CHEERP__) || defined(__ASMJS__)
+#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
