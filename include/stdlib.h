@@ -35,26 +35,30 @@ unsigned long long strtoull (const char *__restrict, char **__restrict, int);
 int rand (void);
 void srand (unsigned);
 
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
+// This pragma disables cheerp attribute injection and address space deduction
+// These are builtins that can be used from both js and wasm
+#pragma cheerp env none
+#ifdef INTERNAL_MUSL
+__attribute__((cheerp_wasm))
 #endif
 void *malloc (size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
+#ifdef INTERNAL_MUSL
+__attribute__((cheerp_wasm))
 #endif
 void *calloc (size_t, size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
+#ifdef INTERNAL_MUSL
+__attribute__((cheerp_wasm))
 #endif
 void *realloc (void *, size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
+#ifdef INTERNAL_MUSL
+__attribute__((cheerp_wasm))
 #endif
 void free (void *);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
+#ifdef INTERNAL_MUSL
+__attribute__((cheerp_wasm))
 #endif
 void *aligned_alloc(size_t, size_t);
+#pragma cheerp env reset
 
 _Noreturn void abort (void);
 int atexit (void (*) (void));
