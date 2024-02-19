@@ -1,6 +1,10 @@
+#define INTERNAL_MUSL
 #include <string.h>
 #include <stdint.h>
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 void *__memset(void *dest, int c, size_t n)
 {
 	unsigned char *s = dest;
@@ -89,5 +93,11 @@ void *__memset(void *dest, int c, size_t n)
 	return dest;
 }
 
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 __attribute__ ((__weak__, alias("__memset"))) void* memset(void* s, int  c, size_t n);
+#ifdef __CHEERP__
+__attribute((cheerp_asmjs))
+#endif
 __attribute__ ((alias("__memset"))) void* __cheerp_memset(void* s, int  c, size_t n);

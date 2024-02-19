@@ -1,3 +1,4 @@
+#define INTERNAL_MUSL
 #include <string.h>
 #include <stdint.h>
 
@@ -6,6 +7,9 @@ typedef __attribute__((__may_alias__)) size_t WT;
 #define WS (sizeof(WT))
 #endif
 
+#if defined(__CHEERP__)
+__attribute((cheerp_asmjs))
+#endif
 void *__memmove(void *dest, const void *src, size_t n)
 {
 	char *d = dest;
@@ -41,5 +45,11 @@ void *__memmove(void *dest, const void *src, size_t n)
 	return dest;
 }
 
+#if defined(__CHEERP__)
+__attribute((cheerp_asmjs))
+#endif
 __attribute__ ((__weak__, alias("__memmove"))) void* memmove(void*dest, const void *src, size_t n);
+#if defined(__CHEERP__)
+__attribute((cheerp_asmjs))
+#endif
 __attribute__ ((alias("__memmove"))) void* __cheerp_memmove(void*dest, const void *src, size_t n);
