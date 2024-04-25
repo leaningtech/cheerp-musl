@@ -424,6 +424,7 @@
 #define SYS_fspick __syscall_fspick
 #define SYS_pidfd_open __syscall_pidfd_open
 #define SYS_clone3 __syscall_clone3
+#define SYS_clone4 __syscall_clone4
 #define SYS_close_range __syscall_close_range
 #define SYS_openat2 __syscall_openat2
 #define SYS_pidfd_getfd __syscall_pidfd_getfd
