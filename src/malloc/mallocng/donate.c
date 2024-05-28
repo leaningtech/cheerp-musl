@@ -7,9 +7,6 @@
 
 #include "meta.h"
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static void donate(unsigned char *base, size_t len)
 {
 	uintptr_t a = (uintptr_t)base;
@@ -36,9 +33,6 @@ static void donate(unsigned char *base, size_t len)
 	}
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 void __malloc_donate(char *start, char *end)
 {
 	donate((void *)start, end-start);

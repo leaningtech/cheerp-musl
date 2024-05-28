@@ -35,25 +35,10 @@ unsigned long long strtoull (const char *__restrict, char **__restrict, int);
 int rand (void);
 void srand (unsigned);
 
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 void *malloc (size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 void *calloc (size_t, size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 void *realloc (void *, size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 void free (void *);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 void *aligned_alloc(size_t, size_t);
 
 _Noreturn void abort (void);
@@ -111,9 +96,6 @@ size_t __ctype_get_mb_cur_max(void);
 #define WIFSTOPPED(s) ((short)((((s)&0xffff)*0x10001)>>8) > 0x7f00)
 #define WIFSIGNALED(s) (((s)&0xffff)-1U < 0xffu)
 
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 int posix_memalign (void **, size_t, size_t);
 int setenv (const char *, const char *, int);
 int unsetenv (const char *);
@@ -157,21 +139,12 @@ void lcong48 (unsigned short [7]);
 char *mktemp (char *);
 int mkstemps (char *, int);
 int mkostemps (char *, int, int);
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 void *valloc (size_t);
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 void *memalign(size_t, size_t);
 int getloadavg(double *, int);
 int clearenv(void);
 #define WCOREDUMP(s) ((s) & 0x80)
 #define WIFCONTINUED(s) ((s) == 0xffff)
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 void *reallocarray (void *, size_t, size_t);
 #endif
 

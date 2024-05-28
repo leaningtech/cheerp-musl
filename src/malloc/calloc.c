@@ -1,13 +1,10 @@
-#define INTERNAL_MUSL
+#if !defined(__CHEERP__) || defined(__ASMJS__)
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
 #include "dynlink.h"
 
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 static size_t mal0_clear(char *p, size_t n)
 {
 	const size_t pagesz = 4096; /* arbitrary */
@@ -28,21 +25,12 @@ static size_t mal0_clear(char *p, size_t n)
 	}
 }
 
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 static int allzerop(void *p)
 {
 	return 0;
 }
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 weak_alias(allzerop, __malloc_allzerop);
 
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 weak
 void *calloc(size_t m, size_t n)
 {
@@ -57,3 +45,4 @@ void *calloc(size_t m, size_t n)
 	n = mal0_clear(p, n);
 	return memset(p, 0, n);
 }
+#endif

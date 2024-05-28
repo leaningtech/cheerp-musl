@@ -15,8 +15,5 @@ extern hidden volatile int *const __bump_lockptr;
 
 extern hidden volatile int *const __vmlock_lockptr;
 
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 hidden void __malloc_atfork(int);
 hidden void __ldso_atfork(int);

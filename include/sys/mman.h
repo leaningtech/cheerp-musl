@@ -118,9 +118,6 @@ int munmap (void *, size_t);
 int mprotect (void *, size_t, int);
 int msync (void *, size_t, int);
 
-#ifdef __CHEERP__
-__attribute__((cheerp_wasm))
-#endif
 int posix_madvise (void *, size_t, int);
 
 int mlock (const void *, size_t);

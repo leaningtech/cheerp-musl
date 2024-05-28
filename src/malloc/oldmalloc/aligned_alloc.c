@@ -1,12 +1,8 @@
-#define INTERNAL_MUSL
 #include <stdlib.h>
 #include <stdint.h>
 #include <errno.h>
 #include "malloc_impl.h"
 
-#ifdef __CHEERP__
-__attribute((cheerp_asmjs))
-#endif
 void *aligned_alloc(size_t align, size_t len)
 {
 	unsigned char *mem, *new;

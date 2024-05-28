@@ -1,4 +1,4 @@
-#define INTERNAL_MUSL
+#if !defined(__CHEERP__) || defined(__ASMJS__)
 #include "malloc-params.h"
 
 /*
@@ -760,10 +760,6 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 
 /* #define HAVE_USR_INCLUDE_MALLOC_H */
 
-#ifdef __CHEERP__
-#pragma clang attribute push(__attribute__((cheerp_asmjs)), apply_to = any(function,record,enum,variable(is_global), variable(is_parameter)))
-#endif
-
 #ifdef HAVE_USR_INCLUDE_MALLOC_H
 #include "/usr/include/malloc.h"
 #else /* HAVE_USR_INCLUDE_MALLOC_H */
@@ -1454,9 +1450,6 @@ DLMALLOC_EXPORT int mspace_mallopt(int, int);
 
 /* #include "malloc.h" */
 
-#ifdef __CHEERP__
-#pragma clang attribute pop
-#endif
 /*------------------------------ internal #includes ---------------------- */
 
 #ifdef _MSC_VER
@@ -1649,10 +1642,6 @@ unsigned char _BitScanReverse(unsigned long *index, unsigned long mask);
 #define align_offset(A)\
  ((((size_t)(A) & CHUNK_ALIGN_MASK) == 0)? 0 :\
   ((MALLOC_ALIGNMENT - ((size_t)(A) & CHUNK_ALIGN_MASK)) & CHUNK_ALIGN_MASK))
-
-#ifdef __CHEERP__
-#pragma clang attribute push(__attribute__((cheerp_asmjs)), apply_to = any(function,record,enum,variable(is_global),variable(is_parameter)))
-#endif
 
 /* -------------------------- MMAP preliminaries ------------------------- */
 
@@ -6312,7 +6301,8 @@ History:
          structure of old version,  but most details differ.)
 
 */
-
-#ifdef __CHEERP__
-#pragma clang attribute pop
+#else
+// empty free to allow taking the address
+void free(void* mem) {
+}
 #endif

@@ -17,9 +17,6 @@ static void set_errno(int e)
 }
 
 __attribute__((__visibility__("hidden")))
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 extern const uint16_t size_classes[];
 
 #define MMAP_THRESHOLD 131052
@@ -27,26 +24,14 @@ extern const uint16_t size_classes[];
 #define UNIT 16
 #define IB 4
 
-struct
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
-group {
-	struct
-#ifdef __CHEERP__
-	__attribute__((cheerp_asmjs))
-#endif
-	meta *meta;
+struct group {
+	struct meta *meta;
 	unsigned char active_idx;
 	char pad[UNIT - sizeof(struct meta *) - 1];
 	unsigned char storage[];
 };
 
-struct
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
-meta {
+struct meta {
 	struct meta *prev, *next;
 	struct group *mem;
 	volatile int avail_mask, freed_mask;
@@ -56,22 +41,14 @@ meta {
 	uintptr_t maplen:8*sizeof(uintptr_t)-12;
 };
 
-struct
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
-meta_area {
+struct meta_area {
 	uint64_t check;
 	struct meta_area *next;
 	int nslots;
 	struct meta slots[];
 };
 
-struct
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
-malloc_context {
+struct malloc_context {
 	uint64_t secret;
 #ifndef PAGESIZE
 	size_t pagesize;
@@ -91,14 +68,7 @@ malloc_context {
 };
 
 __attribute__((__visibility__("hidden")))
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
-extern struct
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
-malloc_context ctx;
+extern struct malloc_context ctx;
 
 #ifdef PAGESIZE
 #define PGSZ PAGESIZE
@@ -107,21 +77,12 @@ malloc_context ctx;
 #endif
 
 __attribute__((__visibility__("hidden")))
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 struct meta *alloc_meta(void);
 
 __attribute__((__visibility__("hidden")))
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 int is_allzero(void *);
 
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void queue(struct meta **phead, struct meta *m)
 {
 	assert(!m->next);
@@ -137,9 +98,6 @@ static inline void queue(struct meta **phead, struct meta *m)
 	}
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void dequeue(struct meta **phead, struct meta *m)
 {
 	if (m->next != m) {
@@ -152,9 +110,6 @@ static inline void dequeue(struct meta **phead, struct meta *m)
 	m->prev = m->next = 0;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline struct meta *dequeue_head(struct meta **phead)
 {
 	struct meta *m = *phead;
@@ -162,18 +117,12 @@ static inline struct meta *dequeue_head(struct meta **phead)
 	return m;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void free_meta(struct meta *m)
 {
 	*m = (struct meta){0};
 	queue(&ctx.free_meta_head, m);
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline uint32_t activate_group(struct meta *m)
 {
 	assert(!m->avail_mask);
@@ -183,17 +132,11 @@ static inline uint32_t activate_group(struct meta *m)
 	return m->avail_mask = mask & act;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline int get_slot_index(const unsigned char *p)
 {
 	return p[-3] & 31;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline struct meta *get_meta(const unsigned char *p)
 {
 	assert(!((uintptr_t)p & 15));
@@ -224,9 +167,6 @@ static inline struct meta *get_meta(const unsigned char *p)
 	return (struct meta *)meta;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline size_t get_nominal_size(const unsigned char *p, const unsigned char *end)
 {
 	size_t reserved = p[-3] >> 5;
@@ -243,9 +183,6 @@ static inline size_t get_nominal_size(const unsigned char *p, const unsigned cha
 	return end-reserved-p;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline size_t get_stride(const struct meta *g)
 {
 	if (!g->last_idx && g->maplen) {
@@ -255,9 +192,6 @@ static inline size_t get_stride(const struct meta *g)
 	}
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void set_size(unsigned char *p, unsigned char *end, size_t n)
 {
 	int reserved = end-p-n;
@@ -270,9 +204,6 @@ static inline void set_size(unsigned char *p, unsigned char *end, size_t n)
 	p[-3] = (p[-3]&31) + (reserved<<5);
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void *enframe(struct meta *g, int idx, size_t n, int ctr)
 {
 	size_t stride = get_stride(g);
@@ -306,9 +237,6 @@ static inline void *enframe(struct meta *g, int idx, size_t n, int ctr)
 	return p;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline int size_to_class(size_t n)
 {
 	n = (n+IB-1)>>4;
@@ -320,9 +248,6 @@ static inline int size_to_class(size_t n)
 	return i;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline int size_overflows(size_t n)
 {
 	if (n >= SIZE_MAX/2 - 4096) {
@@ -332,9 +257,6 @@ static inline int size_overflows(size_t n)
 	return 0;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void step_seq(void)
 {
 	if (ctx.seq==255) {
@@ -345,17 +267,11 @@ static inline void step_seq(void)
 	}
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void record_seq(int sc)
 {
 	if (sc-7U < 32) ctx.unmap_seq[sc-7] = ctx.seq;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void account_bounce(int sc)
 {
 	if (sc-7U < 32) {
@@ -369,18 +285,12 @@ static inline void account_bounce(int sc)
 	}
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline void decay_bounces(int sc)
 {
 	if (sc-7U < 32 && ctx.bounces[sc-7])
 		ctx.bounces[sc-7]--;
 }
 
-#ifdef __CHEERP__
-__attribute__((cheerp_asmjs))
-#endif
 static inline int is_bouncing(int sc)
 {
 	return (sc-7U < 32 && ctx.bounces[sc-7] >= 100);

@@ -81,13 +81,7 @@ int setns(int, int);
 void *memcpy(void *__restrict, const void *__restrict, size_t);
 int memcmp(const void *, const void *, size_t);
 void *memset (void *, int, size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 void *calloc(size_t, size_t);
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
-__attribute((cheerp_asmjs))
-#endif
 void free(void *);
 
 typedef struct cpu_set_t { unsigned long __bits[128/sizeof(long)]; } cpu_set_t;
