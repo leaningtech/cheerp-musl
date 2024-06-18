@@ -51,6 +51,12 @@ void __tl_sync(pthread_t td)
 	if (tl_lock_waiters) __wake(&__thread_list_lock, 1, 0);
 }
 
+__attribute__((cheerp_genericjs))
+void worker_close()
+{
+	__asm__("self.close()");
+}
+
 _Noreturn void __pthread_exit(void *result)
 {
 	pthread_t self = __pthread_self();
@@ -103,6 +109,7 @@ _Noreturn void __pthread_exit(void *result)
 		self->detach_state = state;
 		__restore_sigs(&set);
 		exit(0);
+		worker_close();
 	}
 
 	/* At this point we are committed to thread termination. */
@@ -165,7 +172,8 @@ _Noreturn void __pthread_exit(void *result)
 	self->tid = 0;
 	UNLOCK(self->killlock);
 
-	for (;;) __syscall(SYS_exit, 0);
+	__syscall(SYS_exit, 0);
+	worker_close();
 }
 
 void __do_cleanup_push(struct __ptcb *cb)
