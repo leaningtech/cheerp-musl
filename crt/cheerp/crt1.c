@@ -9,16 +9,22 @@ hidden void (*const __fini_dummy_initializer)(void) = 0;
 weak_alias(__fini_dummy_initializer, __fini_array_end);
 weak_alias(__fini_dummy_initializer, __fini_array_start);
 
-__attribute__((constructor(0)))
-void __cheerp_init_tp()
+static struct tls_module main_tls;
+// These values will be populated by LinearMemoryHelper
+void* volatile __tlsImage = 0x0;
+void* volatile __tlsImageSize = 0x0;
+
+void __cheerp_init_tls()
 {
-	pthread_t td = __get_tp();
-	td->self = td;
-	libc.can_do_threads = 1;
-	td->detach_state = DT_JOINABLE;
-	td->tid = 1;
-	td->locale = &libc.global_locale;
-	td->robust_list.head = &td->robust_list.head;
-	td->sysinfo = __sysinfo;
-	td->next = td->prev = td;
+	main_tls.image = __tlsImage;
+	main_tls.size = __tlsImageSize;
+	main_tls.len = __tlsImageSize;
+	main_tls.align = 16; // ???
+	main_tls.offset = main_tls.size;
+	libc.tls_cnt = 1;
+	libc.tls_head = &main_tls;
+	libc.tls_align = main_tls.align;
+	libc.tls_size = 2*sizeof(void *) + sizeof(struct pthread) + main_tls.size + main_tls.align;
+	unsigned char *mem = (unsigned char*)malloc(libc.tls_size);
+	__init_tp(__copy_tls(mem));
 }
