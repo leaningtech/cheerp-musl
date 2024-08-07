@@ -37,11 +37,8 @@ void *memmove (void *, const void *, size_t);
 __attribute__((cheerp_wasm))
 #endif
 void *memset (void *, int, size_t);
-#ifdef INTERNAL_MUSL
-__attribute__((cheerp_wasm))
-#endif
-int memcmp (const void *, const void *, size_t);
 #pragma cheerp env reset
+int memcmp (const void *, const void *, size_t);
 void *memchr (const void *, int, size_t);
 
 char *strcpy (char *__restrict, const char *__restrict);
