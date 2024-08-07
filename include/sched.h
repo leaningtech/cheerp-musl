@@ -82,11 +82,11 @@ int setns(int, int);
 // These are builtins that can be used from both js and wasm
 #pragma cheerp env none
 void *memcpy(void *__restrict, const void *__restrict, size_t);
-int memcmp(const void *, const void *, size_t);
 void *memset (void *, int, size_t);
 void *calloc(size_t, size_t);
 void free(void *);
 #pragma cheerp env reset
+int memcmp(const void *, const void *, size_t);
 
 typedef struct cpu_set_t { unsigned long __bits[128/sizeof(long)]; } cpu_set_t;
 int __sched_cpucount(size_t, const cpu_set_t *);
