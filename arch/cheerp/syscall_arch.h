@@ -162,7 +162,7 @@ long __syscall_mlockall(long a1,...);
 long __syscall_munlockall();
 long __syscall_sched_setparam(long a1,...);
 long __syscall_sched_getparam(long a1,...);
-long __syscall_sched_setscheduler(pid_t pid, int policy, const struct sched_param *param);
+long __syscall_sched_setscheduler(long pid, int policy, const struct sched_param *param);
 long __syscall_sched_getscheduler(long a1,...);
 long __syscall_sched_yield();
 long __syscall_sched_get_priority_max(long a1,...);
