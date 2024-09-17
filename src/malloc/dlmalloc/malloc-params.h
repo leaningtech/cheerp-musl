@@ -13,7 +13,7 @@ void* dlmalloc_morecore(int size);
 #define NO_MALLOC_STATS 1
 #define MALLINFO_FIELD_TYPE int
 
-#define USE_LOCKS 0
+#define USE_LOCKS 1
 
 #define MALLOC_ALIGNMENT 8
 
