@@ -186,7 +186,7 @@ long __syscall_rt_sigpending(long a1,...);
 long __syscall_rt_sigtimedwait(long a1,...);
 long __syscall_rt_sigqueueinfo(long a1,...);
 long __syscall_rt_sigsuspend(long a1,...);
-long __syscall_pread64(long a1,...);
+int __syscall_pread64(int fd, void* buf, int count, int high, int low);
 long __syscall_pwrite64(long a1,...);
 long __syscall_chown(long a1,...);
 char* __syscall_getcwd(char* a1, long a2);
