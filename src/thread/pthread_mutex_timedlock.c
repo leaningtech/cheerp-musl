@@ -3,6 +3,8 @@
 #define IS32BIT(x) !((x)+0x80000000ULL>>32)
 #define CLAMP(x) (int)(IS32BIT(x) ? (x) : 0x7fffffffU+((0ULL+(x))>>63))
 
+void pushDebug(int nr);
+
 static int __futex4(volatile void *addr, int op, int val, const struct timespec *to)
 {
 #ifdef SYS_futex_time64
@@ -55,6 +57,7 @@ static int pthread_mutex_timedlock_pi(pthread_mutex_t *restrict m, const struct 
 
 int __pthread_mutex_timedlock(pthread_mutex_t *restrict m, const struct timespec *restrict at)
 {
+	pushDebug(33333);
 	if ((m->_m_type&15) == PTHREAD_MUTEX_NORMAL
 	    && !a_cas(&m->_m_lock, 0, EBUSY))
 		return 0;

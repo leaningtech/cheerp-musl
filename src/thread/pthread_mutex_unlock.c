@@ -1,7 +1,11 @@
 #include "pthread_impl.h"
 
+void pushDebug(int nr);
+
 int __pthread_mutex_unlock(pthread_mutex_t *m)
 {
+	pushDebug(22222);
+	pushDebug(m->_m_lock);
 	pthread_t self;
 	int waiters = m->_m_waiters;
 	int cont;
