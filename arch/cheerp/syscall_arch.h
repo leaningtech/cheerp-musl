@@ -43,7 +43,7 @@ long __syscall_sync();
 long __syscall_kill(long a1,...);
 int __syscall_rename(const char *oldpath, const char *newpath);
 int __syscall_mkdir(const char *pathname, int mode);
-long __syscall_rmdir(long a1,...);
+int __syscall_rmdir(const char *path);
 long __syscall_dup(long a1,...);
 long __syscall_pipe(long a1,...);
 long __syscall_times(long a1,...);
