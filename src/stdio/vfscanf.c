@@ -36,36 +36,37 @@
 	_r; \
 })
 
-static void store_int(va_list *ap, int kind, int size, unsigned long long i)
+static void* store_int(va_list *ap, int kind, int size, unsigned long long i)
 {
 	void* dest;
 	switch (size) {
 	case SIZE_hh:
 		dest = GET_ARG(*ap, kind, char*);
-		if (!dest) return;
+		if (!dest) return NULL;
 		*(char *)dest = i;
 		break;
 	case SIZE_h:
 		dest = GET_ARG(*ap, kind, short*);
-		if (!dest) return;
+		if (!dest) return NULL;
 		*(short *)dest = i;
 		break;
 	case SIZE_def:
 		dest = GET_ARG(*ap, kind, int*);
-		if (!dest) return;
+		if (!dest) return NULL;
 		*(int *)dest = i;
 		break;
 	case SIZE_l:
 		dest = GET_ARG(*ap, kind, long*);
-		if (!dest) return;
+		if (!dest) return NULL;
 		*(long *)dest = i;
 		break;
 	case SIZE_ll:
 		dest = GET_ARG(*ap, kind, long long*);
-		if (!dest) return;
+		if (!dest) return NULL;
 		*(long long *)dest = i;
 		break;
 	}
+	return dest;
 }
 
 int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
@@ -314,7 +315,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 			x = __intscan(f, base, 0, ULLONG_MAX);
 			if (!shcnt(f)) goto match_fail;
 			if (t=='p' && (dest = GET_ARG(ap, arg_kind, void*))) *(void **)dest = (void *)(uintptr_t)x;
-			else store_int(&ap, arg_kind, size, x);
+			else dest = store_int(&ap, arg_kind, size, x);
 			break;
 		case 'a': case 'A':
 		case 'e': case 'E':
