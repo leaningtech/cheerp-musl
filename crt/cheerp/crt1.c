@@ -25,6 +25,10 @@ void __cheerp_init_tls()
 	libc.tls_head = &main_tls;
 	libc.tls_align = main_tls.align;
 	libc.tls_size = 2*sizeof(void *) + sizeof(struct pthread) + main_tls.size + main_tls.align;
+#if defined(__CHEERP__) && !defined(__ASMJS__)
+	__init_tp(__get_tp());
+#else
 	unsigned char *mem = (unsigned char*)malloc(libc.tls_size);
 	__init_tp(__copy_tls(mem));
+#endif
 }
