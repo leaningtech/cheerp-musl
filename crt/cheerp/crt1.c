@@ -11,8 +11,8 @@ weak_alias(__fini_dummy_initializer, __fini_array_start);
 
 static struct tls_module main_tls;
 // These values will be populated by LinearMemoryHelper
-void* volatile __tlsImage = 0x0;
-void* volatile __tlsImageSize = 0x0;
+unsigned int volatile __tlsImage = 0x0;
+size_t volatile __tlsImageSize = 0;
 
 void __cheerp_init_tls()
 {
