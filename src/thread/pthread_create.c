@@ -297,6 +297,7 @@ int __pthread_create(pthread_t *restrict res, const pthread_attr_t *restrict att
 	if (!tsd) {
 		if (guard) {
 			map = malloc(size);
+			memset(map, 0, size);
 			if (map == MAP_FAILED) goto fail;
 			if (__mprotect(map+guard, size-guard, PROT_READ|PROT_WRITE)
 			    && errno != ENOSYS) {
@@ -305,6 +306,7 @@ int __pthread_create(pthread_t *restrict res, const pthread_attr_t *restrict att
 			}
 		} else {
 			map = malloc(size);
+			memset(map, 0, size);
 			if (map == MAP_FAILED) goto fail;
 		}
 		tsd = map + size - __pthread_tsd_size;

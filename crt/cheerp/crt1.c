@@ -1,6 +1,7 @@
 #include "libc.h"
 #include "pthread_arch.h"
 #include "pthread_impl.h"
+#include "string.h"
 
 // __fini_array* are relevant only for dynamic linking, and are only defined in ldso/dynlink.c
 // native builds will work regardless, but at link-time Cheerp will potentially crash
@@ -26,5 +27,6 @@ void __cheerp_init_tls()
 	libc.tls_align = main_tls.align;
 	libc.tls_size = 2*sizeof(void *) + sizeof(struct pthread) + main_tls.size + main_tls.align;
 	unsigned char *mem = (unsigned char*)malloc(libc.tls_size);
+	memset(mem, 0, libc.tls_size);
 	__init_tp(__copy_tls(mem));
 }
