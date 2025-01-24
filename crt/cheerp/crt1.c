@@ -28,5 +28,7 @@ void __cheerp_init_tls()
 	libc.tls_size = 2*sizeof(void *) + sizeof(struct pthread) + main_tls.size + main_tls.align;
 	unsigned char *mem = (unsigned char*)malloc(libc.tls_size);
 	memset(mem, 0, libc.tls_size);
-	__init_tp(__copy_tls(mem));
+	struct pthread* self = __copy_tls(mem);
+	self->map_base = mem;
+	__init_tp(self);
 }
