@@ -21,7 +21,7 @@ static int __pthread_timedjoin_np(pthread_t t, void **res, const struct timespec
 	if (r == ETIMEDOUT || r == EINVAL) return r;
 	__tl_sync(t);
 	if (res) *res = t->result;
-	if (t->map_base) __munmap(t->map_base, t->map_size);
+	if (t->map_base) free(t->map_base);
 	return 0;
 }
 
