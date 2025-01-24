@@ -1889,7 +1889,7 @@ static FORCEINLINE void x86_clear_lock(int* sl) {
 #define SPIN_LOCK_YIELD  SleepEx(SLEEP_EX_DURATION, FALSE)
 #elif defined (__SVR4) && defined (__sun) /* solaris */
 #define SPIN_LOCK_YIELD   thr_yield();
-#elif !defined(LACKS_SCHED_H)
+#elif !defined(LACKS_SCHED_H) || defined(__CHEERP__)
 #define SPIN_LOCK_YIELD   sched_yield();
 #else
 #define SPIN_LOCK_YIELD
