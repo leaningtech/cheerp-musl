@@ -15,6 +15,8 @@ static struct tls_module main_tls;
 void* volatile __tlsImage = 0x0;
 void* volatile __tlsImageSize = 0x0;
 
+void *__cheerp_malloc(size_t n);
+
 void __cheerp_init_tls()
 {
 	// Be robust to spurious TLS initialization from shared modules
@@ -30,7 +32,7 @@ void __cheerp_init_tls()
 	libc.tls_head = &main_tls;
 	libc.tls_align = main_tls.align;
 	libc.tls_size = 2*sizeof(void *) + sizeof(struct pthread) + main_tls.size + main_tls.align;
-	unsigned char *mem = (unsigned char*)malloc(libc.tls_size);
+	unsigned char *mem = (unsigned char*)__cheerp_malloc(libc.tls_size);
 	memset(mem, 0, libc.tls_size);
 	struct pthread* self = __copy_tls(mem);
 	self->map_base = mem;

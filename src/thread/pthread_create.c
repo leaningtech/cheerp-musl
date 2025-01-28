@@ -17,6 +17,8 @@ weak_alias(dummy_0, __do_orphaned_stdio_locks);
 weak_alias(dummy_0, __dl_thread_cleanup);
 weak_alias(dummy_0, __membarrier_init);
 
+void *__cheerp_malloc(size_t n);
+
 static int tl_lock_count;
 static int tl_lock_waiters;
 
@@ -296,7 +298,7 @@ int __pthread_create(pthread_t *restrict res, const pthread_attr_t *restrict att
 
 	if (!tsd) {
 		if (guard) {
-			map = malloc(size);
+			map = __cheerp_malloc(size);
 			memset(map, 0, size);
 			if (map == MAP_FAILED) goto fail;
 			if (__mprotect(map+guard, size-guard, PROT_READ|PROT_WRITE)
@@ -305,7 +307,7 @@ int __pthread_create(pthread_t *restrict res, const pthread_attr_t *restrict att
 				goto fail;
 			}
 		} else {
-			map = malloc(size);
+			map = __cheerp_malloc(size);
 			memset(map, 0, size);
 			if (map == MAP_FAILED) goto fail;
 		}

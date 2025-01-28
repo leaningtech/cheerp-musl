@@ -2,6 +2,8 @@
 #include "pthread_impl.h"
 #include <sys/mman.h>
 
+void __cheerp_free(void* ptr);
+
 static void dummy1(pthread_t t)
 {
 }
@@ -21,7 +23,7 @@ static int __pthread_timedjoin_np(pthread_t t, void **res, const struct timespec
 	if (r == ETIMEDOUT || r == EINVAL) return r;
 	__tl_sync(t);
 	if (res) *res = t->result;
-	if (t->map_base) free(t->map_base);
+	if (t->map_base) __cheerp_free(t->map_base);
 	return 0;
 }
 
