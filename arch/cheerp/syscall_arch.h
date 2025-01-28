@@ -375,7 +375,7 @@ long __syscall_getpeername(long a1,...);
 long __syscall_sendto(long a1,...);
 long __syscall_sendmsg(long a1,...);
 long __syscall_recvfrom(long a1,...);
-long __syscall_recvmsg(long a1,...);
+int __syscall_recvmsg(int fd, struct msghdr* msg, int flags, int, int, int);
 long __syscall_shutdown(long a1,...);
 long __syscall_userfaultfd(long a1,...);
 long __syscall_membarrier(int cmd, unsigned int flags);
