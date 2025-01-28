@@ -17,6 +17,10 @@ void* volatile __tlsImageSize = 0x0;
 
 void __cheerp_init_tls()
 {
+	// Be robust to spurious TLS initialization from shared modules
+	// TODO: This code should not be called at all for libraries
+	if(main_tls.image != 0)
+		return;
 	main_tls.image = __tlsImage;
 	main_tls.size = __tlsImageSize;
 	main_tls.len = __tlsImageSize;
