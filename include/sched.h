@@ -81,10 +81,15 @@ int setns(int, int);
 // This pragma disables cheerp attribute injection and address space deduction
 // These are builtins that can be used from both js and wasm
 #pragma cheerp env none
-void *memcpy(void *__restrict, const void *__restrict, size_t);
-void *memset (void *, int, size_t);
-void *calloc(size_t, size_t);
-void free(void *);
+#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
+#define MAYBE_ASMJS __attribute((cheerp_asmjs))
+#else
+#define MAYBE_ASMJS
+#endif
+MAYBE_ASMJS void *memcpy(void *__restrict, const void *__restrict, size_t);
+MAYBE_ASMJS void *memset (void *, int, size_t);
+MAYBE_ASMJS void *calloc(size_t, size_t);
+MAYBE_ASMJS void free(void *);
 #pragma cheerp env reset
 int memcmp(const void *, const void *, size_t);
 
