@@ -38,7 +38,7 @@ void srand (unsigned);
 // This pragma disables cheerp attribute injection and address space deduction
 // These are builtins that can be used from both js and wasm
 #pragma cheerp env none
-#if defined(__CHEERP__) && defined(INTERNAL_MUSL)
+#if defined(__CHEERP__) && (defined(INTERNAL_MUSL) || !defined(__GENERICJS__))
 #define MAYBE_ASMJS __attribute((cheerp_asmjs))
 #else
 #define MAYBE_ASMJS
