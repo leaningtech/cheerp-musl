@@ -246,7 +246,7 @@ long __syscall_tkill(long a1,...);
 long __syscall_sendfile64(long a1,...);
 long __syscall_futex(int* uaddr, int futex_op, ...);
 long __syscall_sched_setaffinity(long a1,...);
-long __syscall_sched_getaffinity(long a1,...);
+long __syscall_sched_getaffinity(long pid, int cpusetsize, unsigned long* mask);
 long __syscall_set_thread_area(unsigned long tp);
 long __syscall_get_thread_area(long a1,...);
 long __syscall_io_setup(long a1,...);
