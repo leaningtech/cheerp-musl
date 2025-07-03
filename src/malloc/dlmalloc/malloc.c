@@ -4698,12 +4698,23 @@ void* dlmalloc(size_t bytes) {
 
 /* ---------------------------- free --------------------------- */
 
+#if defined(__CHEERP__) && defined(__ASMJS__)
+// This value is defined in cheerp-libs, in system/common.cpp
+__attribute__((cheerp_asmjs)) extern char* volatile _heapStart;
+#endif
+
 void dlfree(void* mem) {
   /*
      Consolidate freed chunks with preceeding or succeeding bordering
      free chunks, if they exist, and then place in a bin.  Intermixed
      with special cases for top, dv, mmapped chunks, and usage errors.
   */
+
+#if defined(__CHEERP__) && defined(__ASMJS__)
+  // This memory was promoted to a global in PreExecuter
+  if (mem < _heapStart)
+    return;
+#endif
 
   if (mem != 0) {
     mchunkptr p  = mem2chunk(mem);
