@@ -1,3 +1,4 @@
+#if !defined(__CHEERP__) || defined(__ASMJS__)
 #define INTERNAL_MUSL
 #include <string.h>
 #include <stdint.h>
@@ -135,3 +136,5 @@ __attribute__ ((__weak__, alias("__memcpy"))) void* memcpy(void *restrict dest, 
 __attribute((cheerp_asmjs))
 #endif
 __attribute__ ((alias("__memcpy"))) void* __cheerp_memcpy(void *restrict dest, const void *restrict src, size_t n);
+
+#endif
