@@ -22,10 +22,7 @@ extern "C" {
 
 #include <bits/alltypes.h>
 
-// This pragma disables cheerp attribute injection and address space deduction
-// These are builtins that can be used from both js and wasm
-#pragma cheerp env none
-#if defined(__CHEERP__) && (defined(INTERNAL_MUSL) || !defined(__GENERICJS__))
+#if defined(__CHEERP__) && (defined(__ASMJS__))
 #define MAYBE_ASMJS __attribute((cheerp_asmjs))
 #else
 #define MAYBE_ASMJS
@@ -34,7 +31,6 @@ MAYBE_ASMJS void *memcpy (void *__restrict, const void *__restrict, size_t);
 MAYBE_ASMJS void *memmove (void *, const void *, size_t);
 MAYBE_ASMJS void *memset (void *, int, size_t);
 #undef MAYBE_ASMJS
-#pragma cheerp env reset
 int memcmp (const void *, const void *, size_t);
 void *memchr (const void *, int, size_t);
 
