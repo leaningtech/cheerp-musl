@@ -3,8 +3,6 @@
 #include "pthread_impl.h"
 #include "syscall.h"
 
-#ifndef __CHEERP__
-
 hidden long __cancel(), __syscall_cp_asm(), __syscall_cp_c();
 
 long __cancel()
@@ -16,6 +14,7 @@ long __cancel()
 	return -ECANCELED;
 }
 
+#ifndef __CHEERP__
 long __syscall_cp_asm(volatile void *, syscall_arg_t,
                       syscall_arg_t, syscall_arg_t, syscall_arg_t,
                       syscall_arg_t, syscall_arg_t, syscall_arg_t);
@@ -69,6 +68,8 @@ static void cancel_handler(int sig, siginfo_t *si, void *ctx)
 	__syscall(SYS_tkill, self->tid, SIGCANCEL);
 }
 
+#endif // __CHEERP__
+
 void __testcancel()
 {
 	pthread_t self = __pthread_self();
@@ -78,12 +79,14 @@ void __testcancel()
 
 static void init_cancellation()
 {
+#ifndef __CHEERP__
 	struct sigaction sa = {
 		.sa_flags = SA_SIGINFO | SA_RESTART,
 		.sa_sigaction = cancel_handler
 	};
 	memset(&sa.sa_mask, -1, _NSIG/8);
 	__libc_sigaction(SIGCANCEL, &sa, 0);
+#endif
 }
 
 int pthread_cancel(pthread_t t)
@@ -101,5 +104,3 @@ int pthread_cancel(pthread_t t)
 	}
 	return pthread_kill(t, SIGCANCEL);
 }
-
-#endif // __CHEERP__
