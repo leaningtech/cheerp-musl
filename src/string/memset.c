@@ -1,3 +1,4 @@
+#if !defined(__CHEERP__) || defined(__ASMJS__)
 #define INTERNAL_MUSL
 #include <string.h>
 #include <stdint.h>
@@ -101,3 +102,5 @@ __attribute__ ((__weak__, alias("__memset"))) void* memset(void* s, int  c, size
 __attribute((cheerp_asmjs))
 #endif
 __attribute__ ((alias("__memset"))) void* __cheerp_memset(void* s, int  c, size_t n);
+
+#endif
