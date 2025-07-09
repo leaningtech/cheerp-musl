@@ -35,10 +35,7 @@ unsigned long long strtoull (const char *__restrict, char **__restrict, int);
 int rand (void);
 void srand (unsigned);
 
-// This pragma disables cheerp attribute injection and address space deduction
-// These are builtins that can be used from both js and wasm
-#pragma cheerp env none
-#if defined(__CHEERP__) && (defined(INTERNAL_MUSL) || !defined(__GENERICJS__))
+#if defined(__CHEERP__) && (defined(__ASMJS__))
 #define MAYBE_ASMJS __attribute((cheerp_asmjs))
 #else
 #define MAYBE_ASMJS
@@ -49,7 +46,6 @@ MAYBE_ASMJS void *realloc (void *, size_t);
 MAYBE_ASMJS void free (void *);
 MAYBE_ASMJS void *aligned_alloc(size_t, size_t);
 #undef MAYBE_ASMJS
-#pragma cheerp env reset
 
 _Noreturn void abort (void);
 int atexit (void (*) (void));
