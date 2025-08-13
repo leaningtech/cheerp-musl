@@ -10,7 +10,7 @@ void* dlmalloc_morecore(int size)
 	{
 		// Use the compiler-provided heapStart if valid, otherwise
 		// resort to the syscall, which might might be less precise
-		if (_heapStart > 4)
+		if (_heapStart != 0)
 			end = _heapStart;
 		else
 			end = (char*)SYS_brk(0);
