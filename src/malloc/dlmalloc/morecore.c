@@ -8,7 +8,12 @@ void* dlmalloc_morecore(int size)
 	static char* end = 0;
 	if (!end)
 	{
-		end = (char*)SYS_brk(0);
+		// Use the compiler-provided heapStart if valid, otherwise
+		// resort to the syscall, which might might be less precise
+		if (_heapStart > 4)
+			end = _heapStart;
+		else
+			end = (char*)SYS_brk(0);
 	}
 	char* ret = (char*)SYS_brk(end+size);
 	if (ret < end + size)
