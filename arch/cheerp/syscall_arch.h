@@ -419,7 +419,6 @@ long __syscall_mq_timedsend_time64(long a1,...);
 long __syscall_mq_timedreceive_time64(long a1,...);
 long __syscall_semtimedop_time64(long a1,...);
 long __syscall_rt_sigtimedwait_time64(long a1,...);
-long __syscall_futex_time64(long a1,...);
 long __syscall_sched_rr_get_interval_time64(long a1,...);
 long __syscall_pidfd_send_signal(long a1,...);
 long __syscall_io_uring_setup(long a1,...);

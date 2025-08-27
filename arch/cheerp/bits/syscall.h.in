@@ -410,7 +410,6 @@
 #define SYS_mq_timedreceive_time64 __syscall_mq_timedreceive_time64
 #define SYS_semtimedop_time64 __syscall_semtimedop_time64
 #define SYS_rt_sigtimedwait_time64 __syscall_rt_sigtimedwait_time64
-#define SYS_futex_time64 __syscall_futex_time64
 #define SYS_sched_rr_get_interval_time64 __syscall_sched_rr_get_interval_time64
 #define SYS_pidfd_send_signal __syscall_pidfd_send_signal
 #define SYS_io_uring_setup __syscall_io_uring_setup
