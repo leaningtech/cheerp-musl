@@ -55,7 +55,7 @@ struct epoll_event {
 	uint32_t events;
 	epoll_data_t data;
 }
-#ifdef __x86_64__
+#if defined(__x86_64__) || defined(__CHEERP__)
 __attribute__ ((__packed__))
 #endif
 ;
