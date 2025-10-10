@@ -63,7 +63,7 @@ long __syscall_mpx(long a1,...);
 long __syscall_setpgid(long a1,...);
 long __syscall_ulimit(long a1,...);
 long __syscall_oldolduname(long a1,...);
-long __syscall_umask(long a1,...);
+long __syscall_umask(int mode);
 long __syscall_chroot(long a1,...);
 long __syscall_ustat(long a1,...);
 long __syscall_dup2(int oldfd, int newfd);
