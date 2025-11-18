@@ -317,8 +317,8 @@ long __syscall_renameat(int olddirfd, const char* oldpath, int newdirfd, const c
 long __syscall_linkat(int olddirfd, const char* oldpath, int newdirfd, const char* newpath, int flags);
 long __syscall_symlinkat(const char* target, int newdirfd, const char* linkpath);
 long __syscall_readlinkat(int dirfd, const char* pathname, char* buf, int bufsiz);
-long __syscall_fchmodat(int dirfd, const char* pathname, int mode, ...);
-long __syscall_faccessat(int dirfd, const char* pathname, int mode, ...);
+long __syscall_fchmodat(int dirfd, const char* pathname, int mode);
+long __syscall_faccessat(int dirfd, const char* pathname, int mode);
 long __syscall_pselect6(int nfds, void* readfds, void* writefds, void* exceptfds, void* timeout, void* sigmask);
 long __syscall_ppoll(void* fds, long nfds, void* timeout, const void* sigmask, long sigsetsize);
 long __syscall_unshare(unsigned long unshare_flags);
