@@ -18,7 +18,7 @@ static int checker(void *p)
 	if (__syscall(SYS_setregid, __syscall(SYS_getegid), -1)
 	    || __syscall(SYS_setreuid, __syscall(SYS_geteuid), -1))
 		__syscall(SYS_exit, 1);
-	ret = __syscall(SYS_faccessat, c->fd, c->filename, c->amode, 0);
+	ret = __syscall(SYS_faccessat, c->fd, c->filename, c->amode);
 	__syscall(SYS_write, c->p, &ret, sizeof ret);
 	return 0;
 }
