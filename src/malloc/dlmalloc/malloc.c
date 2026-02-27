@@ -826,6 +826,7 @@ extern "C" {
 #define dlmalloc               malloc
 #define dlmemalign             memalign
 #define dlposix_memalign       posix_memalign
+#define dlaligned_alloc        aligned_alloc
 #define dlrealloc              realloc
 #define dlrealloc_in_place     realloc_in_place
 #define dlvalloc               valloc
@@ -855,6 +856,7 @@ CHEERP_DEFINE_MEMFUNC(realloc, void*, void*, size_t)
 CHEERP_DEFINE_MEMFUNC(free, void, void*)
 CHEERP_DEFINE_MEMFUNC(valloc, void*, size_t)
 CHEERP_DEFINE_MEMFUNC(memalign, void*, size_t, size_t)
+CHEERP_DEFINE_MEMFUNC(aligned_alloc, void*, size_t, size_t)
 CHEERP_DEFINE_MEMFUNC(malloc_usable_size, size_t, void*)
 
 #undef CHEERP_DEFINE_MEMFUNC
@@ -955,6 +957,12 @@ DLMALLOC_EXPORT void* dlmemalign(size_t, size_t);
   returns ENOMEM if memory cannot be allocated.
 */
 DLMALLOC_EXPORT int dlposix_memalign(void**, size_t, size_t);
+
+/*
+  aligned_alloc(size_t alignment, size_t n);
+  like dlposix_memalign, but it returns the pointer instead of using an out arg 
+*/
+DLMALLOC_EXPORT void* aligned_alloc(size_t, size_t);
 
 /*
   valloc(size_t n);
@@ -5311,6 +5319,14 @@ int dlposix_memalign(void** pp, size_t alignment, size_t bytes) {
     *pp = mem;
     return 0;
   }
+}
+
+void* dlaligned_alloc(size_t alignment, size_t bytes) {
+  void* ret;
+  int err = posix_memalign(&ret, alignment, bytes);
+  if (err != 0)
+    return NULL;
+  return ret;
 }
 
 void* dlvalloc(size_t bytes) {
