@@ -5323,7 +5323,7 @@ int dlposix_memalign(void** pp, size_t alignment, size_t bytes) {
 
 void* dlaligned_alloc(size_t alignment, size_t bytes) {
   void* ret;
-  int err = posix_memalign(&ret, alignment, bytes);
+  int err = dlposix_memalign(&ret, alignment, bytes);
   if (err != 0)
     return NULL;
   return ret;
