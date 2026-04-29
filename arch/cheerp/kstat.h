@@ -11,11 +11,15 @@ struct kstat {
 	off_t st_size;
 	blksize_t st_blksize;
 	blkcnt_t st_blocks;
-	long st_atime_sec;
-	long st_atime_nsec;
-	long st_mtime_sec;
-	long st_mtime_nsec;
-	long st_ctime_sec;
-	long st_ctime_nsec;
+	struct {
+		long tv_sec;
+		long tv_nsec;
+	} __st_atim32, __st_mtim32, __st_ctim32;
 	ino_t st_ino;
+	long long st_atime_sec;
+	long long st_atime_nsec;
+	long long st_mtime_sec;
+	long long st_mtime_nsec;
+	long long st_ctime_sec;
+	long long st_ctime_nsec;
 };
