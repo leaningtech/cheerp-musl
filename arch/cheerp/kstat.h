@@ -16,10 +16,13 @@ struct kstat {
 		long tv_nsec;
 	} __st_atim32, __st_mtim32, __st_ctim32;
 	ino_t st_ino;
-	long long st_atime_sec;
+	long st_atime_sec;
+	long pad1;
 	long long st_atime_nsec;
-	long long st_mtime_sec;
+	long st_mtime_sec;
+	long pad2;
 	long long st_mtime_nsec;
-	long long st_ctime_sec;
+	long st_ctime_sec;
+	long pad3;
 	long long st_ctime_nsec;
 };
