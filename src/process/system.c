@@ -10,9 +10,6 @@ extern char **__environ;
 
 int system(const char *cmd)
 {
-#ifdef __CHEERP__
-	return 1;
-#else
 	pid_t pid;
 	sigset_t old, reset;
 	struct sigaction sa = { .sa_handler = SIG_IGN }, oldint, oldquit;
@@ -46,5 +43,4 @@ int system(const char *cmd)
 
 	if (ret) errno = ret;
 	return status;
-#endif
 }
