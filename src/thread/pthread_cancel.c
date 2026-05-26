@@ -14,7 +14,7 @@ long __cancel()
 	return -ECANCELED;
 }
 
-#ifndef __CHEERP__
+#ifndef __SYSCALL_DIRECT
 long __syscall_cp_asm(volatile void *, syscall_arg_t,
                       syscall_arg_t, syscall_arg_t, syscall_arg_t,
                       syscall_arg_t, syscall_arg_t, syscall_arg_t);
@@ -68,7 +68,7 @@ static void cancel_handler(int sig, siginfo_t *si, void *ctx)
 	__syscall(SYS_tkill, self->tid, SIGCANCEL);
 }
 
-#endif // __CHEERP__
+#endif // __SYSCALL_DIRECT
 
 void __testcancel()
 {
@@ -79,7 +79,7 @@ void __testcancel()
 
 static void init_cancellation()
 {
-#ifndef __CHEERP__
+#ifndef __SYSCALL_DIRECT
 	struct sigaction sa = {
 		.sa_flags = SA_SIGINFO | SA_RESTART,
 		.sa_sigaction = cancel_handler
