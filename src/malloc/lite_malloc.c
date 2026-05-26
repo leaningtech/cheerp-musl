@@ -1,4 +1,4 @@
-#ifndef __CHEERP__
+#if !defined(__CHEERP__) && !defined(__wasm__)
 #include <stdlib.h>
 #include <stdint.h>
 #include <limits.h>
