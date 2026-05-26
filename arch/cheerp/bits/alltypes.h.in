@@ -14,7 +14,7 @@ TYPEDEF long wchar_t;
 #endif
 #endif
 
-TYPEDEF unsigned int size_t;
+TYPEDEF __SIZE_TYPE__ size_t;
 
 #if defined(__FLT_EVAL_METHOD__) && __FLT_EVAL_METHOD__ == 0
 TYPEDEF float float_t;
