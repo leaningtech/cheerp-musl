@@ -1,1 +1,2 @@
 COMPAT_SRC_DIRS = compat/time32
+APPEND_SYSCALL_ALIASES = no

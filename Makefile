@@ -79,6 +79,8 @@ LDSO_PATHNAME = $(syslibdir)/ld-musl-$(ARCH)$(SUBARCH).so.1
 -include config.mak
 -include $(srcdir)/arch/$(ARCH)/arch.mak
 
+APPEND_SYSCALL_ALIASES ?= yes
+
 ifeq ($(ARCH),)
 
 all:
@@ -101,7 +103,9 @@ obj/include/bits/alltypes.h: $(srcdir)/arch/$(ARCH)/bits/alltypes.h.in $(srcdir)
 
 obj/include/bits/syscall.h: $(srcdir)/arch/$(ARCH)/bits/syscall.h.in
 	cp $< $@
+ifeq ($(APPEND_SYSCALL_ALIASES),yes)
 	sed -n -e s/__NR_/SYS_/p < $< >> $@
+endif
 
 obj/src/internal/version.h: $(wildcard $(srcdir)/VERSION $(srcdir)/.git)
 	printf '#define VERSION "%s"\n' "$$(cd $(srcdir); sh tools/version.sh)" > $@
