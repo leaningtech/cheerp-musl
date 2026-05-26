@@ -2,6 +2,10 @@
 #include "syscall.h"
 #include "malloc-params.h"
 
+#ifndef __CHEERP__
+char* volatile _heapStart;
+#endif
+
 // This function has the semantics of sbrk
 void* dlmalloc_morecore(int size)
 {

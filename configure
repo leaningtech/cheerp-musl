@@ -361,6 +361,20 @@ tryflag CFLAGS_C99FSE -fexcess-precision=standard \
 || { test "$ARCH" = i386 && tryflag CFLAGS_C99FSE -ffloat-store ; }
 tryflag CFLAGS_C99FSE -frounding-math
 
+# The Cheerp arch can be built either with Cheerp's own compiler or with an
+# upstream wasm clang, detected by __wasm__ being defined while __CHEERP__ is
+# not. With upstream clang, enable the wasm features musl relies on explicitly;
+# Cheerp bitcode archives are only produced by the Cheerp compiler.
+cheerp_upstream_clang=
+if test "$ARCH" = cheerp && trycppif "!defined(__CHEERP__) && defined(__wasm__)" \
+  "$CFLAGS_C99FSE $CPPFLAGS $CFLAGS" ; then
+cheerp_upstream_clang=yes
+fi
+
+if test -n "$cheerp_upstream_clang" ; then
+CFLAGS_AUTO="$CFLAGS_AUTO -matomics -mbulk-memory"
+fi
+
 #
 # We may use the may_alias attribute if __GNUC__ is defined, so
 # if the compiler defines __GNUC__ but does not provide it,
@@ -769,6 +783,11 @@ if trycppif "__FAST_MATH__" \
 fail "$0: error: compiler has broken floating point; check CFLAGS"
 fi
 
+bc_libs_override=
+if test "$ARCH" = cheerp && test -z "$cheerp_upstream_clang" ; then
+bc_libs_override='BC_LIBS = lib/libc.bc lib/crt1.bc $(EMPTY_LIBS)'
+fi
+
 printf "creating config.mak... "
 
 cmdline=$(quote "$0")
@@ -811,6 +830,7 @@ TOOL_LIBS = $tool_libs
 ADD_CFI = $ADD_CFI
 MALLOC_DIR = $malloc_dir
 EOF
+test -n "$bc_libs_override" && echo "$bc_libs_override"
 test "x$static" = xno && echo "STATIC_LIBS ="
 test "x$shared" = xno && echo "SHARED_LIBS ="
 test "x$cc_family" = xgcc && echo 'WRAPCC_GCC = $(CC)'
