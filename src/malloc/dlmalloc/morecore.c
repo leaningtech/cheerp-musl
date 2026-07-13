@@ -1,4 +1,5 @@
 #if !defined(__CHEERP__) || defined(__ASMJS__)
+#include <sys/mman.h>
 #include "syscall.h"
 #include "malloc-params.h"
 
@@ -25,5 +26,18 @@ void* dlmalloc_morecore(int size)
 	char* base = end;
 	end += size;
 	return base;
+}
+
+// The host may honor MAP_UNINITIALIZED and skip zero-filling; dlmalloc is
+// built with MMAP_CLEARS 0 so calloc never relies on mapped memory being zero
+void* dlmalloc_mmap(size_t size)
+{
+	return __mmap(0, size, PROT_READ|PROT_WRITE,
+	              MAP_PRIVATE|MAP_ANONYMOUS|MAP_UNINITIALIZED, -1, 0);
+}
+
+int dlmalloc_munmap(void* addr, size_t size)
+{
+	return __munmap(addr, size);
 }
 #endif
