@@ -1,4 +1,7 @@
-#define HAVE_MMAP 0
+#define HAVE_MMAP 1
+#define HAVE_MREMAP 0
+/* Mappings are requested with MAP_UNINITIALIZED, so calloc must always clear */
+#define MMAP_CLEARS 0
 #define HAVE_MORECORE 1
 #define MORECORE_CONTIGUOUS 1
 #define MORECORE_CANNOT_TRIM 1
@@ -8,6 +11,12 @@
 
 void* dlmalloc_morecore(int size);
 #define MORECORE dlmalloc_morecore
+
+void* dlmalloc_mmap(__SIZE_TYPE__ size);
+int dlmalloc_munmap(void* addr, __SIZE_TYPE__ size);
+#define MMAP(s) dlmalloc_mmap(s)
+#define DIRECT_MMAP(s) dlmalloc_mmap(s)
+#define MUNMAP(a, s) dlmalloc_munmap((a), (s))
 
 #define ABORT __builtin_unreachable()
 #define NO_MALLOC_STATS 1
