@@ -8,11 +8,11 @@
 #ifndef SYSCALL_DEF
 #define __SYSCALL_DEF_DECL
 #if defined(__wasm__) && !defined(__CHEERP__)
-#define __SYSCALL_ATTR(name) __attribute__((import_module("i"), import_name("__syscall_" #name)))
+#define __SYSCALL_ATTR(namestr) __attribute__((import_module("i"), import_name("__syscall_" namestr)))
 #else
-#define __SYSCALL_ATTR(name)
+#define __SYSCALL_ATTR(namestr)
 #endif
-#define SYSCALL_DEF(name, ...) long __SYSCALL_ATTR(name) __syscall_ ## name(__VA_ARGS__)
+#define SYSCALL_DEF(name, ...) long __SYSCALL_ATTR(#name) __syscall_ ## name(__VA_ARGS__)
 #endif
 
 struct iovec;
