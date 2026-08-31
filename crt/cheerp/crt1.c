@@ -72,6 +72,9 @@ void __cheerp_init_tls()
 __attribute__((cheerp_jsexport))
 weak void __startThread(int func, int arg, int tp)
 {
+#if defined(__wasm__) && !defined(__CHEERP__)
+	__wasm_init_tls((void*)((uintptr_t)tp - __clang_wasm_tls_size_aligned()));
+#endif
 	__set_thread_area((void*)tp);
 	int(*f)(void*) = (int(*)(void*))func;
 	void* a = (void*)arg;
