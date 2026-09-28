@@ -36,6 +36,26 @@ static struct builtin_tls {
 
 static struct tls_module main_tls;
 
+#if defined(__wasm__) && !defined(__CHEERP__)
+extern void __wasm_init_tls(void *);
+#endif
+
+// Upstream wasm clang keeps the .tdata image in a passive segment that only
+// __wasm_init_tls can install, and __wasm_init_tls also repoints the caller's
+// __tls_base, so the caller's base is restored afterwards. Only blocks for new
+// threads are initialized: clone() children share or inherit the parent's TLS,
+// as on Linux.
+static void install_tls_image(unsigned char *dst, const struct tls_module *p)
+{
+#if defined(__wasm__) && !defined(__CHEERP__)
+	uintptr_t caller_tls_base = __clang_wasm_tls_base();
+	__wasm_init_tls(dst);
+	__clang_wasm_set_tls_base(caller_tls_base);
+#else
+	memcpy(dst, p->image, p->len);
+#endif
+}
+
 void *__copy_tls(unsigned char *mem)
 {
 #if !( defined(__CHEERP__) && !defined(__ASMJS__))
@@ -53,7 +73,7 @@ void *__copy_tls(unsigned char *mem)
 
 	for (i=1, p=libc.tls_head; p; i++, p=p->next) {
 		dtv[i] = (uintptr_t)(mem + p->offset) + DTP_OFFSET;
-		memcpy(mem + p->offset, p->image, p->len);
+		install_tls_image(mem + p->offset, p);
 	}
 #else
 	dtv = (uintptr_t *)mem;
@@ -64,7 +84,7 @@ void *__copy_tls(unsigned char *mem)
 
 	for (i=1, p=libc.tls_head; p; i++, p=p->next) {
 		dtv[i] = (uintptr_t)(mem - p->offset) + DTP_OFFSET;
-		memcpy(mem - p->offset, p->image, p->len);
+		install_tls_image(mem - p->offset, p);
 	}
 #endif
 	dtv[0] = libc.tls_cnt;
