@@ -16,11 +16,6 @@
 #define __CHEERP_SYSCALL_PROBE() ~, 1
 #define __CHEERP_SYSCALL_IS_PROBE(...) __CHEERP_SYSCALL_SECOND(__VA_ARGS__, 0)
 
-#define __CHEERP_SYSCALL_CASE_PROBE_open __CHEERP_SYSCALL_PROBE()
-#define __CHEERP_SYSCALL_CASE_PROBE_ipc __CHEERP_SYSCALL_PROBE()
-#define __CHEERP_SYSCALL_CASE_PROBE_fcntl64 __CHEERP_SYSCALL_PROBE()
-#define __CHEERP_SYSCALL_CASE_PROBE_futex __CHEERP_SYSCALL_PROBE()
-#define __CHEERP_SYSCALL_CASE_PROBE_openat __CHEERP_SYSCALL_PROBE()
 #define __CHEERP_SYSCALL_CASE_PROBE_clone4 __CHEERP_SYSCALL_PROBE()
 #define __CHEERP_SYSCALL_HAS_CASE(name) __CHEERP_SYSCALL_IS_PROBE(__CHEERP_SYSCALL_CAT(__CHEERP_SYSCALL_CASE_PROBE_, name))
 
@@ -28,16 +23,6 @@
 #define __CHEERP_SYSCALL_SELECT_0(name, ...) __CHEERP_SYSCALL_CAT(__CHEERP_SYSCALL_DISPATCH_, __CHEERP_SYSCALL_NARGS(__VA_ARGS__))(name);
 #define __CHEERP_SYSCALL_SELECT_1(name, ...) __CHEERP_SYSCALL_CAT(__CHEERP_SYSCALL_CASE_, name)();
 
-#define __CHEERP_SYSCALL_CASE_open() \
-	case __NR_open: return __syscall_ret(__syscall_open((const char *)a, (int)b, c))
-#define __CHEERP_SYSCALL_CASE_ipc() \
-	case __NR_ipc: return __syscall_ret(__syscall_ipc(a, b, c, d, e, f))
-#define __CHEERP_SYSCALL_CASE_fcntl64() \
-	case __NR_fcntl64: return __syscall_ret(__syscall_fcntl64((int)a, (int)b, c))
-#define __CHEERP_SYSCALL_CASE_futex() \
-	case __NR_futex: return __syscall_ret(__syscall_futex((int *)a, (int)b, c, d, e, f))
-#define __CHEERP_SYSCALL_CASE_openat() \
-	case __NR_openat: return __syscall_ret(__syscall_openat((int)a, (const char *)b, (int)c, d))
 #define __CHEERP_SYSCALL_CASE_clone4() \
 	case __NR_clone4: return __syscall_ret(__syscall_clone4((int (*)(void *))a, (void *)b, (int)c, (void *)d, (void *)e, (void *)f, (void *)g))
 
