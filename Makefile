@@ -79,8 +79,6 @@ LDSO_PATHNAME = $(syslibdir)/ld-musl-$(ARCH)$(SUBARCH).so.1
 -include config.mak
 -include $(srcdir)/arch/$(ARCH)/arch.mak
 
-APPEND_SYSCALL_ALIASES ?= yes
-
 ifeq ($(ARCH),)
 
 all:
@@ -101,10 +99,13 @@ $(OBJ_DIRS):
 obj/include/bits/alltypes.h: $(srcdir)/arch/$(ARCH)/bits/alltypes.h.in $(srcdir)/include/alltypes.h.in $(srcdir)/tools/mkalltypes.sed
 	sed -f $(srcdir)/tools/mkalltypes.sed $(srcdir)/arch/$(ARCH)/bits/alltypes.h.in $(srcdir)/include/alltypes.h.in > $@
 
+ifeq ($(SYSCALL_LIST),)
 obj/include/bits/syscall.h: $(srcdir)/arch/$(ARCH)/bits/syscall.h.in
 	cp $< $@
-ifeq ($(APPEND_SYSCALL_ALIASES),yes)
 	sed -n -e s/__NR_/SYS_/p < $< >> $@
+else
+obj/include/bits/syscall.h: $(srcdir)/arch/$(ARCH)/bits/syscall.h.in $(SYSCALL_LIST) $(srcdir)/tools/mksyscall.awk
+	LC_ALL=C awk -f $(srcdir)/tools/mksyscall.awk $(SYSCALL_LIST) $< > $@
 endif
 
 obj/src/internal/version.h: $(wildcard $(srcdir)/VERSION $(srcdir)/.git)

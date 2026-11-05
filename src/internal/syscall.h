@@ -53,6 +53,7 @@ hidden long __syscall_ret(unsigned long),
 #define __SYSCALL_DISP(b,...) __SYSCALL_CONCAT(b,__SYSCALL_NARGS(__VA_ARGS__))(__VA_ARGS__)
 
 #define __syscall(...) __SYSCALL_DISP(__syscall,__VA_ARGS__)
+#undef syscall
 #define syscall(...) __syscall_ret(__syscall(__VA_ARGS__))
 
 #define socketcall(nm,a,b,c,d,e,f) __syscall_ret(__socketcall(nm,a,b,c,d,e,f))
