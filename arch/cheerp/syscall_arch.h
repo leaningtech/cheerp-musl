@@ -30,7 +30,7 @@ SYSCALL_DEF(exit, int error_code);
 SYSCALL_DEF(fork);
 SYSCALL_DEF(read, int fd, void* buf, int count);
 SYSCALL_DEF(write, int fd, void* buf, int count);
-SYSCALL_DEF(open, const char* pathname, int flags, ...);
+SYSCALL_DEF(open, const char* pathname, int flags, int mode);
 SYSCALL_DEF(close, int fd);
 SYSCALL_DEF(waitpid, int pid, int* wstatus, int options);
 SYSCALL_DEF(creat, const char* pathname, int mode);
@@ -142,7 +142,7 @@ SYSCALL_DEF(vm86old, void* v86);
 SYSCALL_DEF(wait4, unsigned int pid, int* wstatus, int options, void* rusage);
 SYSCALL_DEF(swapoff, const char* specialfile);
 SYSCALL_DEF(sysinfo, void* info);
-SYSCALL_DEF(ipc, long a1, ...);
+SYSCALL_DEF(ipc, unsigned int call, int first, unsigned long second, unsigned long third, void* ptr, long fifth);
 SYSCALL_DEF(fsync, unsigned int fd);
 SYSCALL_DEF(sigreturn);
 SYSCALL_DEF(clone, unsigned long flags, unsigned long stack, int* parent_tid, unsigned long tls, int* child_tid);
@@ -247,7 +247,7 @@ SYSCALL_DEF(pivot_root, const char* new_root, const char* put_old);
 SYSCALL_DEF(mincore, unsigned long start, long len, unsigned char* vec);
 SYSCALL_DEF(madvise, void* addr, long length, long advice);
 SYSCALL_DEF(getdents64, int fd, void* buf, long len);
-SYSCALL_DEF(fcntl64, int fd, int op, ...);
+SYSCALL_DEF(fcntl64, int fd, int op, unsigned long arg);
 SYSCALL_DEF(gettid);
 SYSCALL_DEF(readahead, int fd, long offsetLow, long offsetHigh, long count);
 SYSCALL_DEF(setxattr, const char* path, const char* name, const void* value, long size, int flags);
@@ -264,7 +264,7 @@ SYSCALL_DEF(lremovexattr, const char* path, const char* name);
 SYSCALL_DEF(fremovexattr, int fd, const char* name);
 SYSCALL_DEF(tkill, int pid, int sig);
 SYSCALL_DEF(sendfile64, int out_fd, int in_fd, long* offset, long count);
-SYSCALL_DEF(futex, int* uaddr, int futex_op, ...);
+SYSCALL_DEF(futex, const volatile void* uaddr, int futex_op, int val, const struct timespec* timeout, const volatile void* uaddr2, int val3);
 SYSCALL_DEF(sched_setaffinity, int pid, unsigned int len, unsigned long* user_mask_ptr);
 SYSCALL_DEF(sched_getaffinity, long pid, int cpusetsize, unsigned long* mask);
 SYSCALL_DEF(set_thread_area, unsigned long tp);
@@ -318,7 +318,7 @@ SYSCALL_DEF(inotify_init);
 SYSCALL_DEF(inotify_add_watch, int fd, const char *pathname, int mask);
 SYSCALL_DEF(inotify_rm_watch, int fd, int wd);
 SYSCALL_DEF(migrate_pages, int pid, unsigned long maxnode, const unsigned long* old_nodes, const unsigned long* new_nodes);
-SYSCALL_DEF(openat, int dirfd, const char *pathname, int flags, ...);
+SYSCALL_DEF(openat, int dirfd, const char *pathname, int flags, int mode);
 SYSCALL_DEF(mkdirat, int dirfd, const char* pathname, int mode);
 SYSCALL_DEF(mknodat, int dirfd, const char* pathname, int mode, unsigned dev);
 SYSCALL_DEF(fchownat, int dirfd, const char* pathname, int uid, int gid, int flags);
@@ -458,6 +458,22 @@ SYSCALL_DEF(faccessat2, int dirfd, const char *pathname, int mode, int flags);
 SYSCALL_DEF(process_madvise, int pidfd, const void* vec, long vlen, int behavior, unsigned int flags);
 
 #ifdef __SYSCALL_DEF_DECL
+/* Linux declares these syscalls variadic.  Their entry functions take every argument, and
+ * calls that omit the trailing ones pass 0.  The slots that carry either a pointer or an
+ * integer, depending on the operation, take either. */
+#define __syscall_open(...) __SYSCALL_OPEN(__VA_ARGS__, 0)
+#define __SYSCALL_OPEN(path, flags, mode, ...) (__syscall_open)(path, flags, mode)
+#define __syscall_openat(...) __SYSCALL_OPENAT(__VA_ARGS__, 0)
+#define __SYSCALL_OPENAT(dirfd, path, flags, mode, ...) (__syscall_openat)(dirfd, path, flags, mode)
+#define __syscall_fcntl64(...) __SYSCALL_FCNTL64(__VA_ARGS__, 0)
+#define __SYSCALL_FCNTL64(fd, op, arg, ...) (__syscall_fcntl64)(fd, op, (unsigned long)(arg))
+#define __syscall_futex(...) __SYSCALL_FUTEX(__VA_ARGS__, 0, 0, 0, 0)
+#define __SYSCALL_FUTEX(uaddr, op, val, timeout, uaddr2, val3, ...) \
+	(__syscall_futex)(uaddr, op, val, (const struct timespec *)(timeout), (const volatile void *)(uaddr2), val3)
+#define __syscall_ipc(...) __SYSCALL_IPC(__VA_ARGS__, 0, 0, 0, 0, 0)
+#define __SYSCALL_IPC(call, first, second, third, ptr, fifth, ...) \
+	(__syscall_ipc)(call, first, second, third, (void *)(ptr), fifth)
+
 #undef SYSCALL_DEF
 #undef __SYSCALL_ATTR
 #undef __SYSCALL_DEF_DECL
