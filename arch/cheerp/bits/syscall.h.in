@@ -52,7 +52,8 @@ static __inline long __syscall_direct_ret(long __r)
 #define syscall(__n, ...) __syscall_direct_ret(__n(__VA_ARGS__))
 #endif
 
-/* The typed call of each syscall's entry function, by syscall number. */
+/* The typed call of each syscall's entry function, by syscall number.  Inlined into a call
+ * with a constant number, it folds to that syscall's entry call. */
 #if !(defined(__CHEERP__) && !defined(__ASMJS__))
 #define __SYSCALL_NARGS_SEL(_0,_1,_2,_3,_4,_5,_6,_7,N,...) N
 #define __SYSCALL_NARGS_OF(...) __SYSCALL_NARGS_SEL(_, __VA_ARGS__ __VA_OPT__(,) 7, 6, 5, 4, 3, 2, 1, 0)
@@ -68,7 +69,7 @@ static __inline long __syscall_direct_ret(long __r)
 #define __SYSCALL_CASE_5(nr, entry) case nr: return ((long (*)(long, long, long, long, long))entry)(__a, __b, __c, __d, __e)
 #define __SYSCALL_CASE_6(nr, entry) case nr: return ((long (*)(long, long, long, long, long, long))entry)(__a, __b, __c, __d, __e, __f)
 #define __SYSCALL_CASE_7(nr, entry) case nr: return ((long (*)(long, long, long, long, long, long, long))entry)(__a, __b, __c, __d, __e, __f, __g)
-static __inline long __syscall_dispatch(long __n, long __a, long __b, long __c, long __d, long __e, long __f, long __g)
+static __inline __attribute__((__always_inline__)) long __syscall_dispatch(long __n, long __a, long __b, long __c, long __d, long __e, long __f, long __g)
 {
 	switch (__n) {
 #define __SYSCALL_DEF __SYSCALL_CASE
@@ -77,6 +78,16 @@ static __inline long __syscall_dispatch(long __n, long __a, long __b, long __c, 
 	}
 	return -ENOSYS;
 }
+
+#if !defined(_CHEERP_DIRECT_SYSCALLS) && defined(__OPTIMIZE__)
+/* A call with a constant syscall number calls that syscall's entry function directly, so
+ * that the generic syscall() and every entry it reaches are not linked for it. */
+#define syscall(...) __SYSCALL_CONST(__VA_ARGS__, 0, 0, 0, 0, 0, 0, 0)
+#define __SYSCALL_CONST(n, a, b, c, d, e, f, g, ...) \
+	(__builtin_constant_p(n) \
+		? __syscall_direct_ret(__syscall_dispatch((n), (long)(a), (long)(b), (long)(c), (long)(d), (long)(e), (long)(f), (long)(g))) \
+		: (syscall)((n), (a), (b), (c), (d), (e), (f), (g)))
+#endif
 #endif
 
 #ifdef __cplusplus
