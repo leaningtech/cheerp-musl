@@ -27,7 +27,7 @@ hidden long __syscall_ret(unsigned long),
 	__syscall_cp(syscall_arg_t, syscall_arg_t, syscall_arg_t, syscall_arg_t,
 	             syscall_arg_t, syscall_arg_t, syscall_arg_t);
 
-#ifdef __SYSCALL_DIRECT
+#ifdef _CHEERP_DIRECT_SYSCALLS
 #define __syscall0(n) n()
 #define __syscall1(n,a) n(a)
 #define __syscall2(n,a,b) n(a,b)
@@ -59,7 +59,7 @@ hidden long __syscall_ret(unsigned long),
 #define socketcall(nm,a,b,c,d,e,f) __syscall_ret(__socketcall(nm,a,b,c,d,e,f))
 #define socketcall_cp(nm,a,b,c,d,e,f) __syscall_ret(__socketcall_cp(nm,a,b,c,d,e,f))
 
-#ifndef __SYSCALL_DIRECT
+#ifndef _CHEERP_DIRECT_SYSCALLS
 #define __syscall_cp0(n) (__syscall_cp)(n,0,0,0,0,0,0)
 #define __syscall_cp1(n,a) (__syscall_cp)(n,__scc(a),0,0,0,0,0)
 #define __syscall_cp2(n,a,b) (__syscall_cp)(n,__scc(a),__scc(b),0,0,0,0)
@@ -68,7 +68,7 @@ hidden long __syscall_ret(unsigned long),
 #define __syscall_cp5(n,a,b,c,d,e) (__syscall_cp)(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e),0)
 #define __syscall_cp6(n,a,b,c,d,e,f) (__syscall_cp)(n,__scc(a),__scc(b),__scc(c),__scc(d),__scc(e),__scc(f))
 
-#else // __SYSCALL_DIRECT
+#else // _CHEERP_DIRECT_SYSCALLS
 #define __syscall_cp0(n) __syscall0(n)
 #define __syscall_cp1(n,a) __syscall1(n,a)
 #define __syscall_cp2(n,a,b) __syscall2(n,a,b)
@@ -76,15 +76,15 @@ hidden long __syscall_ret(unsigned long),
 #define __syscall_cp4(n,a,b,c,d) __syscall4(n,a,b,c,d)
 #define __syscall_cp5(n,a,b,c,d,e) __syscall5(n,a,b,c,d,e)
 #define __syscall_cp6(n,a,b,c,d,e,f) __syscall6(n,a,b,c,d,e,f)
-#endif // __SYSCALL_DIRECT
+#endif // _CHEERP_DIRECT_SYSCALLS
 
 #define __syscall_cp(...) __SYSCALL_DISP(__syscall_cp,__VA_ARGS__)
 #define syscall_cp(...) __syscall_ret(__syscall_cp(__VA_ARGS__))
 
-#ifdef __SYSCALL_DIRECT
+#ifdef _CHEERP_DIRECT_SYSCALLS
 #define __socketcall(nm,a,b,c,d,e,f) __syscall(SYS_##nm, a, b, c, d, e, f)
 #define __socketcall_cp(nm,a,b,c,d,e,f) __syscall_cp(SYS_##nm, a, b, c, d, e, f)
-#else // __SYSCALL_DIRECT
+#else // _CHEERP_DIRECT_SYSCALLS
 static inline long __alt_socketcall(int sys, int sock, int cp, long a, long b, long c, long d, long e, long f)
 {
 	long r;
@@ -101,7 +101,7 @@ static inline long __alt_socketcall(int sys, int sock, int cp, long a, long b, l
 	(long)(a), (long)(b), (long)(c), (long)(d), (long)(e), (long)(f))
 #define __socketcall_cp(nm, a, b, c, d, e, f) __alt_socketcall(SYS_##nm, __SC_##nm, 1, \
 	(long)(a), (long)(b), (long)(c), (long)(d), (long)(e), (long)(f))
-#endif // __SYSCALL_DIRECT
+#endif // _CHEERP_DIRECT_SYSCALLS
 
 
 /* fixup legacy 16-bit junk */
