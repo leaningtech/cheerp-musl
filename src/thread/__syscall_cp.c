@@ -1,7 +1,7 @@
 #include "pthread_impl.h"
 #include "syscall.h"
 
-#ifndef __SYSCALL_DIRECT
+#ifndef _CHEERP_DIRECT_SYSCALLS
 hidden long __syscall_cp_c();
 
 static long sccp(syscall_arg_t nr,
@@ -19,4 +19,4 @@ long (__syscall_cp)(syscall_arg_t nr,
 {
 	return __syscall_cp_c(nr, u, v, w, x, y, z);
 }
-#endif // __SYSCALL_DIRECT
+#endif // _CHEERP_DIRECT_SYSCALLS
