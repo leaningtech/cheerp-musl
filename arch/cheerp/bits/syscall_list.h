@@ -133,7 +133,6 @@ __SYSCALL_DEF(ipc, 117, unsigned int call, int first, unsigned long second, unsi
 __SYSCALL_DEF(fsync, 118, unsigned int fd);
 __SYSCALL_DEF(sigreturn, 119);
 __SYSCALL_DEF(clone, 120, unsigned long flags, unsigned long stack, int* parent_tid, unsigned long tls, int* child_tid);
-__SYSCALL_DEF(clone4, 441, int (*func)(void *), void *stack, int flags, void *arg, void *ptid, void *tls, void *ctid);
 __SYSCALL_DEF(setdomainname, 121, char* name, int len);
 __SYSCALL_DEF(uname, 122, void* utsname);
 __SYSCALL_DEF(modify_ldt, 123, int func, void* ptr, unsigned long bytecount);
@@ -425,6 +424,7 @@ __SYSCALL_DEF(mq_timedsend_time64, 418, int mqdes, const char* msg_ptr, long msg
 __SYSCALL_DEF(mq_timedreceive_time64, 419, int mqdes, char* msg_ptr, long msg_len, unsigned int* msg_prio, const void* abs_timeout);
 __SYSCALL_DEF(semtimedop_time64, 420, int semid, void* sops, unsigned nsops, const void* timeout);
 __SYSCALL_DEF(rt_sigtimedwait_time64, 421, const void* uthese, void* uinfo, const void* uts, long sigsetsize);
+__SYSCALL_DEF(futex_time64, 422, const volatile void* uaddr, int futex_op, int val, const struct timespec* timeout, const volatile void* uaddr2, int val3);
 __SYSCALL_DEF(sched_rr_get_interval_time64, 423, int pid, void* interval);
 __SYSCALL_DEF(pidfd_send_signal, 424, int pidfd, int sig, void* info, unsigned int flags);
 __SYSCALL_DEF(io_uring_setup, 425, unsigned int entries, void* params);
@@ -443,3 +443,7 @@ __SYSCALL_DEF(openat2, 437, int dfd, const char* pathname, void* how, long size)
 __SYSCALL_DEF(pidfd_getfd, 438, int pidfd, int targetfd, unsigned int flags);
 __SYSCALL_DEF(faccessat2, 439, int dirfd, const char *pathname, int mode, int flags);
 __SYSCALL_DEF(process_madvise, 440, int pidfd, const void* vec, long vlen, int behavior, unsigned int flags);
+__SYSCALL_DEF(epoll_pwait2, 441, int epfd, struct epoll_event* events, int maxevents, const struct timespec* timeout, const void* sigmask, long sigsetsize);
+/* NOTE: Not a Linux syscall, numbered past Linux's range: a wasm thread can't return twice from clone, so the
+ * child starts in func */
+__SYSCALL_DEF(clone4, 1024, int (*func)(void *), void *stack, int flags, void *arg, void *ptid, void *tls, void *ctid);

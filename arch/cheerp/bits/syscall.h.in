@@ -35,6 +35,9 @@ extern "C" {
 #define __syscall_futex(...) __SYSCALL_FUTEX(__VA_ARGS__, 0, 0, 0, 0)
 #define __SYSCALL_FUTEX(uaddr, op, val, timeout, uaddr2, val3, ...) \
 	(__syscall_futex)(uaddr, op, val, (const struct timespec *)(timeout), (const volatile void *)(uaddr2), val3)
+#define __syscall_futex_time64(...) __SYSCALL_FUTEX_TIME64(__VA_ARGS__, 0, 0, 0, 0)
+#define __SYSCALL_FUTEX_TIME64(uaddr, op, val, timeout, uaddr2, val3, ...) \
+	(__syscall_futex_time64)(uaddr, op, val, (const struct timespec *)(timeout), (const volatile void *)(uaddr2), val3)
 #define __syscall_ipc(...) __SYSCALL_IPC(__VA_ARGS__, 0, 0, 0, 0, 0)
 #define __SYSCALL_IPC(call, first, second, third, ptr, fifth, ...) \
 	(__syscall_ipc)(call, first, second, third, (void *)(ptr), fifth)
